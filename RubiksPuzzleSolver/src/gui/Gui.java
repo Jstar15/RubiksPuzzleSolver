@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
-
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -158,6 +157,9 @@ public class Gui extends JFrame {
 			}
 		
 		String formatedstate = FormatStringForCubeState(s.toString());
+		RunCommand c = new RunCommand("miker.exe", formatedstate );
+		//System.out.println(formatedstate);
+		textArea.setText(c.getSolution());
 
 	}
 	
