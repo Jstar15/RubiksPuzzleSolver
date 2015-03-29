@@ -32,7 +32,7 @@ void setup(){
 }
 
 void loop(){
-split here
+FlickOverCube();RotateCube90Clockwise();FlickOverCube();FlickOverCube();RotateCube180();FlickOverCube();FlickOverCube();FlickOverCube();RotateCube180();MoveCube90Clockwise();FlickOverCube();RotateCube90AntiClockwise();MoveCube90Clockwise();FlickOverCube();RotateCube180();FlickOverCube();FlickOverCube();FlickOverCube();RotateCube90AntiClockwise();MoveCube90AntiClockwise();FlickOverCube();RotateCube90Clockwise();FlickOverCube();RotateCube180();FlickOverCube();FlickOverCube();FlickOverCube();RotateCube90AntiClockwise();MoveCube90AntiClockwise();FlickOverCube();RotateCube90Clockwise();
   
 while(1);
 }
