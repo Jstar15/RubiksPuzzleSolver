@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import pipes.RunCommand;
+import robotics.CreateArduinoSketch;
 
 public class Gui extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -163,6 +164,9 @@ public class Gui extends JFrame {
 		RunCommand c = new RunCommand("miker.exe", formatedstate );
 		//System.out.println(formatedstate);
 		textArea.setText(c.getSolution());
+		if(c.getSuccess()){
+			new CreateArduinoSketch(c.getSolution());
+		}
 
 	}
 	
