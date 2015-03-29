@@ -162,7 +162,6 @@ public class Gui extends JFrame {
 		
 		String formatedstate = FormatStringForCubeState(s.toString());
 		RunCommand c = new RunCommand("miker.exe", formatedstate );
-		//System.out.println(formatedstate);
 		textArea.setText(c.getSolution());
 		if(c.getSuccess()){
 			new CreateArduinoSketch(c.getSolution());

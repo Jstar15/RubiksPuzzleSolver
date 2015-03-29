@@ -76,7 +76,6 @@ public class CreateArduinoSketch {
 	   }finally {
 		   try {reader.close();} catch (Exception ex) {}
 		}
-	  // System.out.println(content);
 	   return content;
 	}
 
@@ -95,9 +94,6 @@ public class CreateArduinoSketch {
 	
 	private void CreateAndSaveSketch(String[] moves){
 		String[] sketchtemplate = getSketchTemplate();
-	//	for(String s : moves){
-		//	System.out.println(s);
-		//}
 		
 		s.append(sketchtemplate[0]);
 		for(int index = 0; index < moves.length; index++){
@@ -109,7 +105,6 @@ public class CreateArduinoSketch {
 	
 	private void DetermineRobotMove(String move){
 		if(move.length()>0){
-			System.out.println(move);
 			if(move.charAt(0) == 'F'){
 				FromFaceToFace('F');
 				TurnCubeFace('F', move);
