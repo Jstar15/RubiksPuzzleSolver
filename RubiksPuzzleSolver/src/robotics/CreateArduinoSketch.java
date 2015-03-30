@@ -11,20 +11,23 @@ public class CreateArduinoSketch {
 	private CubeObject cube = new CubeObject();
 	
 	public CreateArduinoSketch(String moves){
-		//moves = "Solution: F B2 U2 L' U2 F' R B2 R' D (14q, 10f)";
+		//moves = "Solution: F B2 U2 L' U2 F' R B2 R' D (14q, 10f)";  //example input
 		String[] movesarray = GetMovesFromStr(moves);
 		CreateAndSaveSketch(movesarray);
 	}
 	
 	private void MoveCube90Clockwise(){
 		s.append("MoveCube90Clockwise();");
-		cube.FlipCube();
-		cube.MoveCube90Clockwise();
+		cube.MoveCube90Clockwise();;
 	}
 	
 	private void MoveCube90AntiClockwise(){
 		s.append("MoveCube90AntiClockwise();");
 		cube.MoveCube90AntiClockwise();
+	}
+	private void MoveCube180(){
+		s.append("MoveCube180();");
+		cube.MoveCube180();
 	}
 	
 	private void RotateCube90Clockwise(){
@@ -42,6 +45,7 @@ public class CreateArduinoSketch {
 	private void FlipCube(){
 		s.append("FlickOverCube();");
 		cube.FlipCube();
+	
 	}
 	
 	
@@ -51,8 +55,8 @@ public class CreateArduinoSketch {
 	
 	
 	private String[] GetMovesFromStr(String moves){
-		int start = moves.indexOf(':')+1;
-		int end = moves.indexOf('(');
+		int start = moves.indexOf(": ")+1;
+		int end = moves.indexOf(" (");
 		String movearray[] = moves.substring(start, end).trim().split(" ");
 		return movearray;
 	}
@@ -143,20 +147,21 @@ public class CreateArduinoSketch {
 			MoveCube90AntiClockwise();
 			FlipCube();
 		}else if (targetface == cube.getBack()){
-			FlipCube();
-			FlipCube();
+			MoveCube180();
 			FlipCube();
 		}
 	}
 	
-	private void TurnCubeFace(int targetface, String move){
+	private void TurnCubeFace(char targetface, String move){	
 		if(move.length() == 1){
 			RotateCube90Clockwise();
 		}else{
 			if(move.charAt(1)  == '2'){
 				RotateCube180();
-			}else{
+			}else if(move.charAt(1)  == '\''){
 				RotateCube90AntiClockwise();
+			}else{
+				System.out.println("error unknown move");
 			}
 		}
 	}

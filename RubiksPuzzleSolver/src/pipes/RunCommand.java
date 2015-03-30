@@ -9,7 +9,7 @@ public class RunCommand {
 	private Boolean success = false;
 	public RunCommand(String command, String cubestate){
 		try {
-			//cubestate = "UF,UR,UB,UL,LB,DB,DL,RD,FR,FL,DF,BR,LDF,RDB,DLB,RUF,LUB,DRF,FUL,BUR,";
+			//cubestate = "UF,UR,UB,UL,LB,DB,DL,RD,FR,FL,DF,BR,LDF,RDB,DLB,RUF,LUB,DRF,FUL,BUR,";  //example cube state input
 			Process p = Runtime.getRuntime().exec(command +" "+ cubestate);
 			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line;

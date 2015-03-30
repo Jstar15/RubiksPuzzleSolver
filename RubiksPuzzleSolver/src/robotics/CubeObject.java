@@ -81,5 +81,15 @@ public class CubeObject {
 		return back;
 	}
 	
+	public void printState(){
+		System.out.println("front "+ front);
+		System.out.println("up "+ up);
+		System.out.println("right "+ right);
+		System.out.println("left "+ left);
+		System.out.println("down "+ down);
+		System.out.println("back "+ back);
+		
+		
+	}
 	
 }
