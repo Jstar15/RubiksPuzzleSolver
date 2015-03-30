@@ -24,8 +24,10 @@ public class RunCommand {
 		if(solution!= null){
 			String status = solution.substring(0, 5);
 			if(!status.equals("Error")){
-				solution = "Solution: "+ solution;
+				solution = " Solution: "+ solution;
 				success = true;
+			}else{
+				solution =" "+solution;
 			}
 		}
 

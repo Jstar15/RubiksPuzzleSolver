@@ -6,12 +6,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
-
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.border.EmptyBorder;
 
 import pipes.RunCommand;
 import robotics.CreateArduinoSketch;
@@ -41,26 +43,75 @@ public class Gui extends JFrame {
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    setSize(1200, 800);
 	    setLocationRelativeTo(null);
-	    setMinimumSize(new Dimension(1200, 800));
+	    setMinimumSize(new Dimension(1300, 840));
 
 	    
 	    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, CubePanel(), OutputPanel());
-        splitPane.setResizeWeight(0.75);
+        splitPane.setResizeWeight(0.83);
         splitPane.setOpaque(false);
+		container.add(TitlePanel(), BorderLayout.NORTH	);
 		container.add(splitPane, BorderLayout.CENTER);
-
+		container.add(new VisionPanel(), BorderLayout.EAST	);
 	}
 	
 	//output panel that will display output to the user 
-	private JPanel OutputPanel(){
+	private JPanel TitlePanel(){
+		
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(1, 1));
-		textArea.setFont(new Font("Serif", Font.PLAIN, 14));
-		textArea.setEditable(false);
-		textArea.setText("hello");
-		textArea.setContentType("text/html; charset=UTF-8");
+		panel.setLayout(new BorderLayout());
+	    panel.setBackground(Color.GRAY);
+		panel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 55 ));
+		panel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		JPanel leftpanel = new JPanel();
+		leftpanel.setLayout(new BorderLayout());
+		leftpanel.setBackground(Color.GRAY);
+		
+		JLabel title = new JLabel("   Rubiks Puzzle Solver");
+		title.setFont(new Font("Serif", Font.BOLD, 22));
+		title.setForeground(Color.WHITE);
+		
+		JLabel name = new JLabel("    By Jordan Waddell");
+		name.setFont(new Font("Serif", Font.BOLD, 14));
+		name.setForeground(Color.WHITE);
+		name.setBorder(new EmptyBorder(10, 0, 0, 0));
+		
+		leftpanel.add(title,  BorderLayout.WEST);
+		leftpanel.add(name,  BorderLayout.EAST);
+		
+		panel.add(leftpanel,  BorderLayout.WEST);
+		
+		return panel;
+	} 
+		
 	
-		panel.add(textArea);
+	//output panel that will display output to the user 
+	private JPanel OutputPanel(){
+		JPanel outputpanel = new JPanel();
+		outputpanel.setLayout(new GridLayout(1, 1));
+		outputpanel.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.BLACK));
+		
+		textArea.setFont(new Font("Serif", Font.PLAIN, 16));
+		textArea.setEditable(false);
+		textArea.setText("");
+	
+		outputpanel.add(textArea);
+
+		
+		JPanel titlepanel = new JPanel();
+		titlepanel.setLayout(new BorderLayout());
+		titlepanel.setBackground(Color.GRAY);
+		titlepanel.setBorder(new EmptyBorder(5, 2, 8, 0));
+		
+		JLabel title = new JLabel("   Program Output");
+		title.setFont(new Font("Serif", Font.BOLD, 17));
+		title.setForeground(Color.WHITE);
+		titlepanel.add(title);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+		panel.add(titlepanel,  BorderLayout.NORTH);
+		panel.add(outputpanel,  BorderLayout.CENTER);
 	
 		return panel;
 	} 
@@ -70,7 +121,7 @@ public class Gui extends JFrame {
 	private JPanel CubePanel() {
 		int FSIZE = 60;
 		int[] XOFF = { 4, 7, 4, 4, 1, 10 };
-		int[] YOFF = { 0, 3, 3, 6, 3, 3 };
+		int[] YOFF = { 1, 4, 4, 7, 4, 4 };
 		
 		JPanel panel = new JPanel();
 		
@@ -110,7 +161,7 @@ public class Gui extends JFrame {
 
 		JButton resetb = new JButton("Reset Cube");
 		getContentPane().add(resetb);
-		resetb.setBounds(460, 125 ,120, 30);
+		resetb.setBounds(460, 190 ,120, 30);
 		resetb.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
@@ -120,11 +171,11 @@ public class Gui extends JFrame {
 		
 		JButton solveb = new JButton("Solve Cube");
 		getContentPane().add(solveb);
-		solveb.setBounds(600, 125 ,120, 30);
+		solveb.setBounds(600, 190 ,120, 30);
 		solveb.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		    	textArea.setText("Solving cube ... \nThis may take a few moments");
+		    	textArea.setText(" Solving cube ... This may take a few moments");
 		        Thread t1 = new Thread(new Runnable() {
 		            public void run(){
 				    	solveCube();
