@@ -49,8 +49,4 @@ public class UploadSketchToArduino {
 	public String getOutput() {
 		return lastline;
 	}
-
-	public static void main(String[] args) throws Exception {
-    	UploadSketchToArduino x = new UploadSketchToArduino("COM3");
-    }
 }
