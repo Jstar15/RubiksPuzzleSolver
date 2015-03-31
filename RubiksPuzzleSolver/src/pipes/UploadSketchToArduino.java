@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 public class UploadSketchToArduino {
 	private String output= null;
+	private String lastline = null;
 	private Boolean success = false;
 	public UploadSketchToArduino(String comport){
 		
@@ -18,7 +19,7 @@ public class UploadSketchToArduino {
         builder.redirectErrorStream(true);
         Process p;
         String line;
-        String lastline = null;
+        
 		try {
 			p = builder.start();
 	        BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -27,7 +28,6 @@ public class UploadSketchToArduino {
 	            if (line == null) { break; }
 	            output += line;
 	            lastline = line;
-	            System.out.println(line);
 	       }
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -47,7 +47,7 @@ public class UploadSketchToArduino {
 	}
 
 	public String getOutput() {
-		return output;
+		return lastline;
 	}
 
 	public static void main(String[] args) throws Exception {

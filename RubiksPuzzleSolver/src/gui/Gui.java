@@ -25,7 +25,7 @@ public class Gui extends JFrame {
 	private JEditorPane textArea = new JEditorPane();
 	private final Color[] COLORS = { Color.white, Color.red, Color.green, Color.yellow, Color.orange, Color.blue };
 	private Color curCol = COLORS[0]; 
-
+	private JPanel arduinopanel = new ArduinoPanel();
 	//initiate JFrame
 	public static void main(String[] args) {
 		Gui frame = new Gui();
@@ -161,7 +161,8 @@ public class Gui extends JFrame {
 
 		JButton resetb = new JButton("Reset Cube");
 		getContentPane().add(resetb);
-		resetb.setBounds(460, 190 ,120, 30);
+		resetb.setBounds(460, 180 ,120, 30);
+		resetb.setFocusable(false);
 		resetb.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
@@ -171,7 +172,8 @@ public class Gui extends JFrame {
 		
 		JButton solveb = new JButton("Solve Cube");
 		getContentPane().add(solveb);
-		solveb.setBounds(600, 190 ,120, 30);
+		solveb.setBounds(600, 180 ,120, 30);
+		solveb.setFocusable(false);
 		solveb.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
@@ -179,10 +181,13 @@ public class Gui extends JFrame {
 		        Thread t1 = new Thread(new Runnable() {
 		            public void run(){
 				    	solveCube();
-		            }});  
-		            t1.start();
+		        }});  
+		        t1.start();
 		    }
 		});
+		
+		
+		getContentPane().add(arduinopanel);
 		
 		return panel;
 	}
@@ -216,6 +221,9 @@ public class Gui extends JFrame {
 		textArea.setText(c.getSolution());
 		if(c.getSuccess()){
 			new CreateArduinoSketch(c.getSolution());
+			arduinopanel.setVisible(true);
+		}else{
+			arduinopanel.setVisible(false);
 		}
 
 	}
@@ -229,6 +237,7 @@ public class Gui extends JFrame {
 			}
 		}
 		textArea.setText("");
+		arduinopanel.setVisible(false);
 	}
 	
 	//sorts string array into a format taht can be passed to solver program
