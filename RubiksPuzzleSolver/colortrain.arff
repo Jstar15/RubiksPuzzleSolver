@@ -3,7 +3,7 @@
 @attribute avgblue numeric
 @attribute avgred numeric
 @attribute avggreen numeric
-@attribute class {red,blue,green,orange,yellow,white}
+@attribute class {red,blue,green,orange,yellow,white,unknown}
 
 @data
 191,161,172,white
