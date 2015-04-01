@@ -62,7 +62,20 @@ public class VisionPanel extends JPanel{
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		JButton analysebutton = new JButton(" Analyse ");
+		analysebutton .addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				 CapturePixels();
+			}
+		});
+		
 		JButton resetbutton = new JButton("  Reset   ");
+		resetbutton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				((JButton) evt.getSource()).setBackground(curCol);
+			}
+		});
+		
+		
 		
 		panel.add( analysebutton, BorderLayout.WEST);
 		panel.add( resetbutton, BorderLayout.EAST);

@@ -80,24 +80,17 @@ public final class CaptureImage extends JPanel implements Runnable {
         image = flipVertical(image);
         RescaleOp rescaleOp = new RescaleOp(2f, 20, null);
         rescaleOp.filter(image, image);  // Source and destination are the same
+        
+        //only run when user wants to predict colors on a cube face
         if(capturepixelrgb == true){
         	splitImage(image);
+        	capturepixelrgb = false;
             
         }
     }
 
     public void CapturePixels(){
-        Thread t1 = new Thread(new Runnable() {
-            public void run(){
-            	try {    	
-            		capturepixelrgb = true;
-					Thread.sleep(50);
-			       	capturepixelrgb = false;
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-        }});  
-        t1.start();
+    	capturepixelrgb = true;
     }
     
     @Override
@@ -180,29 +173,22 @@ public final class CaptureImage extends JPanel implements Runnable {
                 gr.dispose();
             }
         }
-        System.out.println("Splitting done");
 
         //writing mini images into image files
         for (int i = 0; i < imgs.length; i++) {
             imgs[i] = cropImage(imgs[i]);
             SquareColor avgsquarecolor = getAveragePixelFromImageArray( getPixelArrayFromImage(imgs[i]) );
+            
             //SaveImageDataToArffFile("colortrain.arff", "green",  avgsquarecolor, true); //for buuilding traijnig set only
             SaveImageDataToArffFile("colortest.arff", "unknown",  avgsquarecolor, false);
             
             try {
 				WekaMachineLearning w = new WekaMachineLearning();
+				w.getColorarray();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-            
-            try {
-				ImageIO.write(imgs[i], "jpg", new File(i +"image.jpg"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
         }
-        
-        System.out.println("Mini images created");
     }
     
     public BufferedImage cropImage(BufferedImage image){
@@ -214,7 +200,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     //temp class used when creating training set for weka
     private void SaveImageDataToArffFile(String filename, String color,  SquareColor square, Boolean append){
     	//save to arff file
-    	String header = "@relation color\n@attribute avgblue numeric\n@attribute avgred numeric\n@attribute avggreen numeric\n@attribute class {red,blue,green,orange,yellow,white,unknown}\n\n";
+    	String header = "@relation color\n@attribute avgblue numeric\n@attribute avgred numeric\n@attribute avggreen numeric\n@attribute class {red,blue,green,orange,yellow,white,unknown}\n\n@data\n";
     	try{
     	    FileWriter fw = new FileWriter(filename, append); //the true will append the new data
     	    if(!append){
