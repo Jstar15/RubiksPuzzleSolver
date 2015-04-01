@@ -24,7 +24,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     private  byte [] b;           // pixel bytes
     private BufferedImage image; // our drawing canvas
     private Thread idx_Thread;
-    private BufferedImage template = GetBufferedImage("template.gif");
+    private BufferedImage template = GetBufferedImage("images/template.gif");
     private Boolean capturepixelrgb = false;
     
     public CaptureImage() {
