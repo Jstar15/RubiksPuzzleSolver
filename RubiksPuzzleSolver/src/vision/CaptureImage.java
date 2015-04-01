@@ -11,6 +11,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -185,8 +186,8 @@ public final class CaptureImage extends JPanel implements Runnable {
         for (int i = 0; i < imgs.length; i++) {
             imgs[i] = cropImage(imgs[i]);
             SquareColor avgsquarecolor = getAveragePixelFromImageArray( getPixelArrayFromImage(imgs[i]) );
-            SaveImageDataToArffFile("0",  avgsquarecolor);
-            //0 is white
+            //SaveImageDataToArffFile("colortrain.arff", "green",  avgsquarecolor, true);
+           //SaveImageDataToArffFile("colortrain.arff", "green",  avgsquarecolor, false);
             try {
 				ImageIO.write(imgs[i], "jpg", new File(i +"image.jpg"));
 			} catch (IOException e) {
@@ -202,8 +203,18 @@ public final class CaptureImage extends JPanel implements Runnable {
 		return croppedImage;	
     }
     
-    private void SaveImageDataToArffFile(String color,  SquareColor square){
+    
+    //temp class used when creating training set for weka
+    private void SaveImageDataToArffFile(String filename, String color,  SquareColor square, Boolean append){
     	//save to arff file
+    	try{
+    	    FileWriter fw = new FileWriter(filename, append); //the true will append the new data
+    	    fw.write(square.getBlue()+","+ square.getRed()+"," +square.getGreen()+","+color+"\n");//appends the string to the file
+    	    fw.close();
+    	}
+    	catch(IOException ioe){
+    	    System.out.println("IOException: " + ioe.getMessage());
+    	}
     }
     
 

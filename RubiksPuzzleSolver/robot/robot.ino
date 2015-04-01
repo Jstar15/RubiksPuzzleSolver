@@ -32,7 +32,7 @@ void setup(){
 }
 
 void loop(){
-FlickOverCube();RotateCube90Clockwise();FlickOverCube();FlickOverCube();RotateCube180();FlickOverCube();FlickOverCube();FlickOverCube();RotateCube180();MoveCube90Clockwise();FlickOverCube();RotateCube90AntiClockwise();MoveCube90Clockwise();FlickOverCube();RotateCube180();FlickOverCube();FlickOverCube();FlickOverCube();RotateCube90AntiClockwise();MoveCube90AntiClockwise();FlickOverCube();RotateCube90Clockwise();FlickOverCube();RotateCube180();FlickOverCube();FlickOverCube();FlickOverCube();RotateCube90AntiClockwise();MoveCube90AntiClockwise();FlickOverCube();RotateCube90Clockwise();
+FlickOverCube();RotateCube90Clockwise();FlickOverCube();FlickOverCube();RotateCube180();MoveCube180();FlickOverCube();RotateCube180();MoveCube90AntiClockwise();FlickOverCube();RotateCube90AntiClockwise();MoveCube180();FlickOverCube();RotateCube180();MoveCube90AntiClockwise();FlickOverCube();RotateCube90AntiClockwise();MoveCube90Clockwise();FlickOverCube();RotateCube90Clockwise();FlickOverCube();RotateCube180();MoveCube180();FlickOverCube();RotateCube90AntiClockwise();MoveCube90Clockwise();FlickOverCube();RotateCube90Clockwise();
   
 while(1);
 }
@@ -43,7 +43,7 @@ void RotateCube90Clockwise(){
 ArmUpClockwise();
   digitalWrite(dir_b, LOW); 
   bstart();
-  delay(3200);
+  delay(3500);
 
   while(true){
     delay(50);
@@ -69,7 +69,7 @@ void RotateCube90AntiClockwise(){
   ArmUpAntiClockwise();
   digitalWrite(dir_b, HIGH); 
   bstart();
-  delay(2800);
+  delay(3500);
 
   while(true){
     delay(50);
@@ -96,7 +96,7 @@ void RotateCube180(){
   ArmUpAntiClockwise();
   digitalWrite(dir_b, HIGH); 
   bstart();
-  delay(7000);
+  delay(7500);
 
   while(true){
     delay(50);
@@ -172,7 +172,7 @@ void ArmDown(){
 void MoveCube90AntiClockwise(){
   bstart();
   digitalWrite(dir_b, HIGH); 
-  delay(2000);
+  delay(2200);
   while(true){
     delay(50);
     val = analogRead(analogPin);    // read the input pin
@@ -190,7 +190,7 @@ void MoveCube90AntiClockwise(){
 void MoveCube90Clockwise(){
   bstart();
   digitalWrite(dir_b, LOW); 
-  delay(2000);
+  delay(2200);
   while(true){
     delay(50);
     val = analogRead(analogPin);    // read the input pin
@@ -207,7 +207,7 @@ void MoveCube90Clockwise(){
 void MoveCube180(){
   bstart();
   digitalWrite(dir_b, HIGH); 
-  delay(5000);
+  delay(7000);
   while(true){
     delay(50);
     val = analogRead(analogPin);    // read the input pin
