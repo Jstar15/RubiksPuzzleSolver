@@ -62,7 +62,7 @@ public class CreateArduinoSketch {
 	}
 	
 	private String[] getSketchTemplate(){
-		String content = readFile("SketchTemplate.txt");
+		String content = readFile("robot/SketchTemplate.txt");
 		return content.split("split here");
 	}
 	
@@ -130,6 +130,7 @@ public class CreateArduinoSketch {
 			}
 		}
 	}
+	
 	
 	
 	private void FromFaceToFace(char targetface){

@@ -1,8 +1,0 @@
-@relation color
-@attribute avgblue numeric
-@attribute avgred numeric
-@attribute avggreen numeric
-@attribute class {red,blue,green,orange,yellow,white,unknown}
-
-@data
-98,170,86,unknown

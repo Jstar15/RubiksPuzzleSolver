@@ -180,7 +180,7 @@ public final class CaptureImage extends JPanel implements Runnable {
             SquareColor avgsquarecolor = getAveragePixelFromImageArray( getPixelArrayFromImage(imgs[i]) );
             
             //SaveImageDataToArffFile("colortrain.arff", "green",  avgsquarecolor, true); //for buuilding traijnig set only
-            SaveImageDataToArffFile("colortest.arff", "unknown",  avgsquarecolor, false);
+            SaveImageDataToArffFile("weka/colortest.arff", "unknown",  avgsquarecolor, false);
             
             try {
 				WekaMachineLearning w = new WekaMachineLearning();

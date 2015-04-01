@@ -13,11 +13,11 @@ public class WekaMachineLearning {
 	private ArrayList<String> colorarray = new ArrayList<String>();
 	
 	public WekaMachineLearning() throws Exception{
-		BufferedReader datafiletrain = readDataFile("colortrain.arff");
+		BufferedReader datafiletrain = readDataFile("weka/colortrain.arff");
 		Instances train = new Instances(datafiletrain);
 		train.setClassIndex(train.numAttributes() - 1);
 		
-		BufferedReader datafiletest = readDataFile("colortest.arff");
+		BufferedReader datafiletest = readDataFile("weka/colortest.arff");
 		Instances test = new Instances(datafiletest);
 		test.setClassIndex(test.numAttributes() - 1);
 		
