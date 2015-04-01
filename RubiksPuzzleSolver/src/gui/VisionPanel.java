@@ -11,7 +11,7 @@ import vision.CaptureImage;
 
 public class VisionPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
-
+	private CaptureImage win = new CaptureImage();
 	public VisionPanel(){
 		
 		setLayout(new BorderLayout());
@@ -29,15 +29,16 @@ public class VisionPanel extends JPanel{
 		title.setForeground(Color.WHITE);
 		titlepanel.add(title);
 		
-        CaptureImage win = new CaptureImage();
         win.start();
 		
-		panel.add(titlepanel, BorderLayout.NORTH	);
+		panel.add(titlepanel, BorderLayout.NORTH);
 		panel.add(win, BorderLayout.CENTER);
 
-		
 		add(panel);
 		
 	}
-
+	
+	public void CapturePixels(){
+		win.CapturePixels();
+	}
 }

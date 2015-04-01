@@ -26,6 +26,7 @@ public class Gui extends JFrame {
 	private final Color[] COLORS = { Color.white, Color.red, Color.green, Color.yellow, Color.orange, Color.blue };
 	private Color curCol = COLORS[0]; 
 	private JPanel arduinopanel = new ArduinoPanel();
+	private JPanel visionpanel = new VisionPanel();
 	//initiate JFrame
 	public static void main(String[] args) {
 		Gui frame = new Gui();
@@ -51,7 +52,7 @@ public class Gui extends JFrame {
         splitPane.setOpaque(false);
 		container.add(TitlePanel(), BorderLayout.NORTH	);
 		container.add(splitPane, BorderLayout.CENTER);
-		container.add(new VisionPanel(), BorderLayout.EAST	);
+		container.add(visionpanel, BorderLayout.EAST	);
 	}
 	
 	//output panel that will display output to the user 
@@ -234,6 +235,7 @@ public class Gui extends JFrame {
 			for (int j = 0; j < 9; j++) {
 				facelet[i][j].setBackground(Color.gray);
 				facelet[i][j].setRolloverEnabled(false);
+				((VisionPanel) visionpanel).CapturePixels();
 			}
 		}
 		textArea.setText("");
