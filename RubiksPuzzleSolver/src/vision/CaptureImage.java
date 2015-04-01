@@ -24,7 +24,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     private  byte [] b;           // pixel bytes
     private BufferedImage image; // our drawing canvas
     private Thread idx_Thread;
-    private BufferedImage template = GetBufferedImage("template.png");
+    private BufferedImage template = GetBufferedImage("template.gif");
     private Boolean capturepixelrgb = false;
     
     public CaptureImage() {
@@ -186,8 +186,15 @@ public final class CaptureImage extends JPanel implements Runnable {
         for (int i = 0; i < imgs.length; i++) {
             imgs[i] = cropImage(imgs[i]);
             SquareColor avgsquarecolor = getAveragePixelFromImageArray( getPixelArrayFromImage(imgs[i]) );
-            //SaveImageDataToArffFile("colortrain.arff", "green",  avgsquarecolor, true);
-           //SaveImageDataToArffFile("colortrain.arff", "green",  avgsquarecolor, false);
+            //SaveImageDataToArffFile("colortrain.arff", "green",  avgsquarecolor, true); //for buuilding traijnig set only
+            SaveImageDataToArffFile("colortest.arff", "unknown",  avgsquarecolor, false);
+            
+            try {
+				WekaMachineLearning w = new WekaMachineLearning();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+            
             try {
 				ImageIO.write(imgs[i], "jpg", new File(i +"image.jpg"));
 			} catch (IOException e) {
@@ -207,8 +214,12 @@ public final class CaptureImage extends JPanel implements Runnable {
     //temp class used when creating training set for weka
     private void SaveImageDataToArffFile(String filename, String color,  SquareColor square, Boolean append){
     	//save to arff file
+    	String header = "@relation color\n@attribute avgblue numeric\n@attribute avgred numeric\n@attribute avggreen numeric\n@attribute class {red,blue,green,orange,yellow,white,unknown}\n\n";
     	try{
     	    FileWriter fw = new FileWriter(filename, append); //the true will append the new data
+    	    if(!append){
+    	    	fw.write(header);
+    	    }
     	    fw.write(square.getBlue()+","+ square.getRed()+"," +square.getGreen()+","+color+"\n");//appends the string to the file
     	    fw.close();
     	}
