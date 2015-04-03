@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+
+import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.meta.FilteredClassifier;
 import weka.classifiers.meta.RotationForest;
 import weka.core.Instances;
@@ -25,7 +27,9 @@ public class WekaMachineLearning {
 		Remove rm = new Remove();
 		rm.setAttributeIndices("1");  // remove 1st attribute
 		// classifier
-		RotationForest model =	new RotationForest();
+		//RotationForest model =	new RotationForest();
+		MultilayerPerceptron model =	new MultilayerPerceptron();
+		
 
 		// meta-classifier
 		FilteredClassifier fc = new FilteredClassifier();
