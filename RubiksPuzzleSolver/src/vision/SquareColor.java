@@ -1,7 +1,6 @@
 package vision;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class SquareColor {
     private int red;

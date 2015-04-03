@@ -15,7 +15,7 @@ import pipes.UploadSketchToArduino;
 public class ArduinoPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private String[] comports = { "COM1", "COM2", "COM3", "COM4", "COM5" };
-	private JComboBox combolist = new JComboBox(comports);
+	private JComboBox<String> combolist = new JComboBox<>(comports);
 	
 	public ArduinoPanel(){
 		setLayout(new BorderLayout());

@@ -5,12 +5,12 @@
 @attribute class {red,blue,green,orange,yellow,white,unknown}
 
 @data
-187,176,175,unknown
-209,195,200,unknown
-139,76,122,unknown
-116,135,80,unknown
-115,152,78,unknown
-129,71,120,unknown
-123,121,80,unknown
-124,139,77,unknown
-135,66,112,unknown
+135,89,107,unknown
+127,90,115,unknown
+142,103,130,unknown
+129,84,107,unknown
+133,89,115,unknown
+133,96,129,unknown
+135,82,104,unknown
+133,84,107,unknown
+134,84,116,unknown

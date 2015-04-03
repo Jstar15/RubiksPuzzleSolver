@@ -1,18 +1,17 @@
 package vision;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-
-import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.meta.FilteredClassifier;
 import weka.classifiers.meta.RotationForest;
 import weka.core.Instances;
 import weka.filters.unsupervised.attribute.Remove;
  
 public class WekaMachineLearning {
-	private ArrayList<String> colorarray = new ArrayList<String>();
+	private ArrayList<Color> colorarray = new ArrayList<Color>();
 	
 	public WekaMachineLearning() throws Exception{
 		BufferedReader datafiletrain = readDataFile("weka/colortrain.arff");
@@ -36,7 +35,7 @@ public class WekaMachineLearning {
 		fc.buildClassifier(train);
 		for (int i = 0; i < test.numInstances(); i++) {
 			double pred = fc.classifyInstance(test.instance(i));
-		    colorarray.add(test.classAttribute().value((int) pred));
+		    colorarray.add(getColorFromString(test.classAttribute().value((int) pred)));
 		 }
 	}	
 	
@@ -53,13 +52,27 @@ public class WekaMachineLearning {
 	}
  
 
-	public ArrayList<String> getColorarray() {
+	public ArrayList<Color> getColorarray() {
 		return colorarray;
 	}
 
-	public static void main(String[] args) throws Exception {
+	private Color getColorFromString(String strcolor){
+		Color color = null;
+		if(strcolor.equals("green")){
+			color = Color.GREEN;
+		}else if(strcolor.equals("blue")){
+			color = Color.BLUE;
+		}else if(strcolor.equals("red")){
+			color = Color.RED;
+		}else if(strcolor.equals("orange")){
+			color = Color.ORANGE;
+		}else if(strcolor.equals("white")){
+			color = Color.WHITE;
+		}else if(strcolor.equals("yellow")){
+			color = Color.YELLOW;
+		}
 		
-	
+		return color;
 	}
 
 }

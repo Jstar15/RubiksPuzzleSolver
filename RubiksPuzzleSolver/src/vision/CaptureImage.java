@@ -4,7 +4,6 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -14,20 +13,22 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 public final class CaptureImage extends JPanel implements Runnable {
-    private VideoCapture cap;    // capture
+	private static final long serialVersionUID = 1L;
+	private VideoCapture cap;    // capture
     private  byte [] b;           // pixel bytes
     private BufferedImage image; // our drawing canvas
     private Thread idx_Thread;
     private BufferedImage template = GetBufferedImage("images/template.gif");
     private Boolean capturepixelrgb = false;
-    private  ArrayList<String> colorarray = new ArrayList<String>();
-    public CaptureImage() {
+    private  ArrayList<Color> colorarray = new ArrayList<Color>();
+    private Boolean previewready = false;
+
+	public CaptureImage() {
     	setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.BLACK));
         init();
     }
@@ -64,7 +65,7 @@ public final class CaptureImage extends JPanel implements Runnable {
             } catch (InterruptedException e){}
         }
     }
-    public void convert(Mat m){            
+    private void convert(Mat m){            
         Mat m2 = new Mat();    
         int type = BufferedImage.TYPE_BYTE_GRAY;
         if ( m.channels() > 1 ) {
@@ -85,7 +86,13 @@ public final class CaptureImage extends JPanel implements Runnable {
         if(capturepixelrgb == true){
         	splitImage(image);
         	capturepixelrgb = false;
-            
+            try {
+    			WekaMachineLearning w = new WekaMachineLearning();
+    			colorarray = w.getColorarray();
+    			setPreviewready(true);
+    		} catch (Exception e1) {
+    			e1.printStackTrace();
+    		}
         }
     }
 
@@ -100,7 +107,7 @@ public final class CaptureImage extends JPanel implements Runnable {
         g.drawImage(template, 0, 0, 310, 300, null);     
     }   
     
-    public BufferedImage flipVertical(BufferedImage src){
+    private BufferedImage flipVertical(BufferedImage src){
         AffineTransform tx=AffineTransform.getScaleInstance(-1.0,1.0);  //scaling
         tx.translate(-src.getWidth(),0);  //translating
         AffineTransformOp tr=new AffineTransformOp(tx,null);  //transforming
@@ -152,7 +159,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     
 
     //split image in 9 quadrants (quadrant per cube square)
-    public void splitImage(BufferedImage image) {
+    private void splitImage(BufferedImage image) {
         int rows = 3; //You should decide the values for rows and cols variables
         int cols = 3;
         int chunks = rows * cols;
@@ -184,24 +191,17 @@ public final class CaptureImage extends JPanel implements Runnable {
             	SaveImageDataToArffFile("weka/colortest.arff", "unknown",  avgsquarecolor, true);
             }
         }
-        
-        try {
-			WekaMachineLearning w = new WekaMachineLearning();
-			colorarray = w.getColorarray();
-			
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
     }
     
-    public BufferedImage cropImage(BufferedImage image){
+    private BufferedImage cropImage(BufferedImage image){
     	BufferedImage croppedImage = image.getSubimage(70, 70, image.getWidth()-110, image.getHeight()-110);
 		return croppedImage;	
     }
     
-    public ArrayList<String> GetColorArray(){
+    public ArrayList<Color> GetColorArray(){
     	return colorarray;
     }
+    
     //temp class used when creating training set for weka
     private void SaveImageDataToArffFile(String filename, String color,  SquareColor square, Boolean append){
     	//save to arff file
@@ -219,6 +219,14 @@ public final class CaptureImage extends JPanel implements Runnable {
     	}
     }
     
+    public Boolean getPreviewready() {
+		return previewready;
+	}
+
+	public void setPreviewready(Boolean previewready) {
+		this.previewready = previewready;
+	}
+
 
     
     
