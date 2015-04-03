@@ -235,7 +235,6 @@ public class Gui extends JFrame {
 			for (int j = 0; j < 9; j++) {
 				facelet[i][j].setBackground(Color.gray);
 				facelet[i][j].setRolloverEnabled(false);
-				((VisionPanel) visionpanel).CapturePixels();
 			}
 		}
 		textArea.setText("");

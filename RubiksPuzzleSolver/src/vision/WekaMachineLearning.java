@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.meta.FilteredClassifier;
+import weka.classifiers.meta.RotationForest;
 import weka.core.Instances;
 import weka.filters.unsupervised.attribute.Remove;
  
@@ -24,7 +26,7 @@ public class WekaMachineLearning {
 		Remove rm = new Remove();
 		rm.setAttributeIndices("1");  // remove 1st attribute
 		// classifier
-		MultilayerPerceptron model =	new MultilayerPerceptron();
+		RotationForest model =	new RotationForest();
 
 		// meta-classifier
 		FilteredClassifier fc = new FilteredClassifier();
@@ -34,11 +36,7 @@ public class WekaMachineLearning {
 		fc.buildClassifier(train);
 		for (int i = 0; i < test.numInstances(); i++) {
 			double pred = fc.classifyInstance(test.instance(i));
-		    System.out.print("ID: " + test.instance(i).value(0));
-		    System.out.print(", actual: " + test.classAttribute().value((int) test.instance(i).classValue()));
-		    System.out.println(", predicted: " + test.classAttribute().value((int) pred));
 		    colorarray.add(test.classAttribute().value((int) pred));
-		    
 		 }
 	}	
 	

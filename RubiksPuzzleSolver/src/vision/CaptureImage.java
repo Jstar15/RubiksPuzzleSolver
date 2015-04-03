@@ -26,7 +26,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     private Thread idx_Thread;
     private BufferedImage template = GetBufferedImage("images/template.gif");
     private Boolean capturepixelrgb = false;
-    
+    private  ArrayList<String> colorarray = new ArrayList<String>();
     public CaptureImage() {
     	setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.BLACK));
         init();
@@ -147,9 +147,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     	blue = blue / count;
     	green = green / count;
     	
-    	SquareColor avgsquarecolor = new SquareColor(red, blue, green);
-    	avgsquarecolor.printcolors();
-		return avgsquarecolor;
+		return new SquareColor(red, blue, green);
     }
     
 
@@ -179,16 +177,21 @@ public final class CaptureImage extends JPanel implements Runnable {
             imgs[i] = cropImage(imgs[i]);
             SquareColor avgsquarecolor = getAveragePixelFromImageArray( getPixelArrayFromImage(imgs[i]) );
             
-            //SaveImageDataToArffFile("colortrain.arff", "green",  avgsquarecolor, true); //for buuilding traijnig set only
-            SaveImageDataToArffFile("weka/colortest.arff", "unknown",  avgsquarecolor, false);
-            
-            try {
-				WekaMachineLearning w = new WekaMachineLearning();
-				w.getColorarray();
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+           // SaveImageDataToArffFile("weka/colortrain.arff", "yellow",  avgsquarecolor, true); //for buuilding traijnig set only
+            if(i == 0){
+                SaveImageDataToArffFile("weka/colortest.arff", "unknown",  avgsquarecolor, false);
+            }else{
+            	SaveImageDataToArffFile("weka/colortest.arff", "unknown",  avgsquarecolor, true);
+            }
         }
+        
+        try {
+			WekaMachineLearning w = new WekaMachineLearning();
+			colorarray = w.getColorarray();
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
     }
     
     public BufferedImage cropImage(BufferedImage image){
@@ -196,7 +199,9 @@ public final class CaptureImage extends JPanel implements Runnable {
 		return croppedImage;	
     }
     
-    
+    public ArrayList<String> GetColorArray(){
+    	return colorarray;
+    }
     //temp class used when creating training set for weka
     private void SaveImageDataToArffFile(String filename, String color,  SquareColor square, Boolean append){
     	//save to arff file

@@ -2,10 +2,12 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent ;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,7 +20,7 @@ import vision.CaptureImage;
 public class VisionPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private CaptureImage win = new CaptureImage();
-	private JButton[][] facelet = new JButton[3][3];
+	private JButton[] facelet = new JButton[9];
 	private final Color[] COLORS = { Color.white, Color.red, Color.green, Color.yellow, Color.orange, Color.blue };
 	private Color curCol = COLORS[0]; 
 	public VisionPanel(){
@@ -49,7 +51,7 @@ public class VisionPanel extends JPanel{
 		
 		JPanel prepanel = new JPanel();
 		prepanel.setLayout(new BorderLayout());
-		prepanel.add(PreviewPanel(), BorderLayout.CENTER);
+		prepanel.add(PreviewPanel(), BorderLayout.NORTH);
 		
 		
 		add(prepanel, BorderLayout.CENTER);
@@ -88,25 +90,28 @@ public class VisionPanel extends JPanel{
 	public JPanel PreviewPanel(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
+		panel.setBorder(new EmptyBorder(0, 0, 300, 0));
 		JPanel previewpanel = new JPanel();
-		previewpanel.setLayout(new GridLayout(3,3));
+		previewpanel.setLayout(new GridLayout(3, 3, 5, 5));
+		
 		previewpanel.setBorder(BorderFactory.createMatteBorder(2, 4, 2, 5, Color.BLACK));
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++){
-				facelet[i][j] = new JButton("  ");
-				facelet[i][j].setBackground(Color.gray);
-				facelet[i][j].setRolloverEnabled(false);
-				facelet[i][j].setEnabled( false ); 
-				facelet[i][j].setOpaque(true);
-				facelet[i][j].addActionListener(new ActionListener(){
+		for (int i = 0; i < 9; i++) {
+			
+				facelet[i] = new JButton("  ");
+				facelet[i].setBackground(Color.gray);
+				facelet[i].setRolloverEnabled(false);
+				facelet[i].setPreferredSize(new Dimension(75, 90));
+				facelet[i].setEnabled( false ); 
+				facelet[i].setOpaque(true);
+				facelet[i].addActionListener(new ActionListener(){
 			    @Override
 			    public void actionPerformed(ActionEvent evt){
 			    	((JButton) evt.getSource()).setBackground(curCol);
 			    	
 			    	}
 			    });
-			        previewpanel.add(facelet[i][j]);
-			}
+			        previewpanel.add(facelet[i]);
+		
 			
 		}
 		   
@@ -128,12 +133,41 @@ public class VisionPanel extends JPanel{
 		return panel;
 	}
 	
+	public void ShowPreview(){
+		
+	}
+	
 	public void CapturePixels(){
 		win.CapturePixels();
-		 try {
-			Thread.sleep(1000);
+    	try {
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+    	
+		ArrayList<String> colorarray = win.GetColorArray();
+		for (int i = 0; i < colorarray.size(); i++) {
+			Color color = getColorFromString(colorarray.get(i));
+			facelet[i].setBackground(color);
+		}
+	}
+	
+	private Color getColorFromString(String strcolor){
+		Color color = null;
+		if(strcolor.equals("green")){
+			color = Color.GREEN;
+		}else if(strcolor.equals("blue")){
+			color = Color.BLUE;
+		}else if(strcolor.equals("red")){
+			color = Color.RED;
+		}else if(strcolor.equals("orange")){
+			color = Color.ORANGE;
+		}else if(strcolor.equals("white")){
+			color = Color.WHITE;
+		}else if(strcolor.equals("yellow")){
+			color = Color.YELLOW;
+		}
+		
+		return color;
 	}
 }

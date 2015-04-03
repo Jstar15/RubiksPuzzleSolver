@@ -38,8 +38,5 @@ public class SquareColor {
         return this.green;
     }
 
-    public void printcolors(){
-    	System.out.println(getBlue()+" "+ getGreen()+" " +getRed());
-    }
 
 }
