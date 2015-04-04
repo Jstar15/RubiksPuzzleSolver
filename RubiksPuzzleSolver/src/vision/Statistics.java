@@ -1,8 +1,12 @@
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
 
 package vision;
 
 import java.util.ArrayList;
 
+//determines the mean, std dev and varience for an arrayList of SquareColor(rgb values), //each rgb value represents a pixel in an image
 public class Statistics {
 
 	private SquareColor mean;
@@ -33,7 +37,7 @@ public class Statistics {
 		return varience;
 	}
 
-	public SquareColor DetermineMean() {
+	private void DetermineMean() {
     	double red = 0;
     	double blue = 0;
     	double green =0;
@@ -49,10 +53,9 @@ public class Statistics {
     	green = green / size;
     	
     	mean = new SquareColor(red, blue, green);
-		return mean;
     }
 
-    public SquareColor DetermineVariance() {
+    private void DetermineVariance() {
     	double redmean = mean.getRed();
     	double bluemean = mean.getBlue();
     	double greenmean =mean.getGreen();
@@ -72,10 +75,9 @@ public class Statistics {
     	green = green / size;
     	
     	varience = new SquareColor(red, blue, green);
-        return varience;
     }
 
-    public SquareColor DetermineStdDev() {
+    private void DetermineStdDev() {
     	
     	double red = Math.sqrt(varience.getRed());
     	double blue = Math.sqrt(varience.getBlue());
@@ -83,6 +85,5 @@ public class Statistics {
     	
     	stddev = new SquareColor(red, blue, green);
     	
-        return stddev;
     }
 }
