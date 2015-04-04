@@ -8,11 +8,11 @@ import java.awt.*;
 
 //object used to hold RGB value of a pixel
 public class SquareColor {
-    private int red;
-    private int blue;
-    private int green;
+    private double red;
+    private double blue;
+    private double green;
 
-    public SquareColor(int red, int blue, int green){
+    public SquareColor(double red, double blue, double green){
         this.red = red;
         this.blue = blue;
         this.green = green;
@@ -30,15 +30,15 @@ public class SquareColor {
         this.green = color.getGreen();
     }
 
-    public int getRed(){
+    public double getRed(){
         return this.red;
     }
 
-    public int getBlue(){
+    public double getBlue(){
         return this.blue;
     }
 
-    public int getGreen(){
+    public double getGreen(){
         return this.green;
     }
 
