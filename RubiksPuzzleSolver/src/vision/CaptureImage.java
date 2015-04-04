@@ -1,3 +1,7 @@
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
+
 package vision;
 
 import org.opencv.core.Core;
@@ -27,7 +31,8 @@ public final class CaptureImage extends JPanel implements Runnable {
     private Boolean capturepixelrgb = false;
     private  ArrayList<Color> colorarray = new ArrayList<Color>();
     private Boolean previewready = false;
-
+    private Boolean training;
+    private Color trainingcolor;
 	public CaptureImage() {
     	setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.BLACK));
         init();
@@ -52,6 +57,8 @@ public final class CaptureImage extends JPanel implements Runnable {
         }
     }
 
+    
+    //keep refreshing image from camera to show video
     public void run() {
         Mat m = new Mat();
         while(true) {
@@ -65,6 +72,8 @@ public final class CaptureImage extends JPanel implements Runnable {
             } catch (InterruptedException e){}
         }
     }
+    
+    //prepare image and wait for user request
     private void convert(Mat m){            
         Mat m2 = new Mat();    
         int type = BufferedImage.TYPE_BYTE_GRAY;
@@ -78,13 +87,19 @@ public final class CaptureImage extends JPanel implements Runnable {
         m2.get(0,0,b);
         image = new BufferedImage(m.cols(),m.rows(), type);
         image.getRaster().setDataElements(0, 0, m.cols(),m.rows(), b);   
+        
+        //flip image 
         image = flipVertical(image);
+        
+        //increase brightness and contrast on image
         RescaleOp rescaleOp = new RescaleOp(2f, 20, null);
         rescaleOp.filter(image, image);  // Source and destination are the same
         
-        //only run when user wants to predict colors on a cube face
+        //if user requests to capture a cube face state
         if(capturepixelrgb == true){
-        	splitImage(image);
+        	//split image and run weka using created trainging set
+        	BufferedImage imgs[] = splitImage(image);
+        	PrepareArffFiles(imgs);
         	capturepixelrgb = false;
             try {
     			WekaMachineLearning w = new WekaMachineLearning();
@@ -96,8 +111,12 @@ public final class CaptureImage extends JPanel implements Runnable {
         }
     }
 
-    public void CapturePixels(){
+    //reinitiate class variables 
+    public void CapturePixels(Boolean training, Color trainingcolor){
+    	this.training = training;
+    	this.trainingcolor=trainingcolor;
     	capturepixelrgb = true;
+    	
     }
     
     @Override
@@ -107,6 +126,7 @@ public final class CaptureImage extends JPanel implements Runnable {
         g.drawImage(template, 0, 0, 310, 300, null);     
     }   
     
+    //flip image vertical
     private BufferedImage flipVertical(BufferedImage src){
         AffineTransform tx=AffineTransform.getScaleInstance(-1.0,1.0);  //scaling
         tx.translate(-src.getWidth(),0);  //translating
@@ -115,6 +135,7 @@ public final class CaptureImage extends JPanel implements Runnable {
         return tr.filter(src, null);  //filtering
        }
    
+    //get image form file
     public BufferedImage GetBufferedImage(String src){
     BufferedImage img = null;
     try {
@@ -124,6 +145,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     return img;
     }
 
+    //get an array of pixels for an image represented as RGB
     private ArrayList<SquareColor> getPixelArrayFromImage(BufferedImage image){
 		ArrayList<SquareColor> colorarray = new ArrayList<SquareColor>();
     	int w = image.getWidth();
@@ -137,7 +159,7 @@ public final class CaptureImage extends JPanel implements Runnable {
 		return  colorarray;
     }
     
-    //get averafe
+    //get average pixels for RGB values in an array
     private  SquareColor getAveragePixelFromImageArray( ArrayList<SquareColor> colorarray){
     	int red = 0;
     	int blue = 0;
@@ -159,7 +181,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     
 
     //split image in 9 quadrants (quadrant per cube square)
-    private void splitImage(BufferedImage image) {
+    private  BufferedImage[] splitImage(BufferedImage image) {
         int rows = 3; //You should decide the values for rows and cols variables
         int cols = 3;
         int chunks = rows * cols;
@@ -178,13 +200,22 @@ public final class CaptureImage extends JPanel implements Runnable {
                 gr.dispose();
             }
         }
-
-        //writing mini images into image files
+        return imgs;
+    }
+    
+    
+    //prepare arff files used by weka for machine learning
+    private void PrepareArffFiles(BufferedImage imgs[]){
+    	
+        //writing images to .Arff file for either traning or test set
         for (int i = 0; i < imgs.length; i++) {
             imgs[i] = cropImage(imgs[i]);
             SquareColor avgsquarecolor = getAveragePixelFromImageArray( getPixelArrayFromImage(imgs[i]) );
             
-           // SaveImageDataToArffFile("weka/colortrain.arff", "yellow",  avgsquarecolor, true); //for buuilding traijnig set only
+            if(training){
+                SaveImageDataToArffFile("weka/colortrain.arff",  ColorToString(trainingcolor),  avgsquarecolor, true); //for buuilding traijnig set only
+            }
+
             if(i == 0){
                 SaveImageDataToArffFile("weka/colortest.arff", "unknown",  avgsquarecolor, false);
             }else{
@@ -193,6 +224,7 @@ public final class CaptureImage extends JPanel implements Runnable {
         }
     }
     
+    //crop image
     private BufferedImage cropImage(BufferedImage image){
     	BufferedImage croppedImage = image.getSubimage(70, 70, image.getWidth()-110, image.getHeight()-110);
 		return croppedImage;	
@@ -202,9 +234,8 @@ public final class CaptureImage extends JPanel implements Runnable {
     	return colorarray;
     }
     
-    //temp class used when creating training set for weka
+    //save prepares string to an .arff files based on criteria ( arg )
     private void SaveImageDataToArffFile(String filename, String color,  SquareColor square, Boolean append){
-    	//save to arff file
     	String header = "@relation color\n@attribute avgblue numeric\n@attribute avgred numeric\n@attribute avggreen numeric\n@attribute class {red,blue,green,orange,yellow,white,unknown}\n\n@data\n";
     	try{
     	    FileWriter fw = new FileWriter(filename, append); //the true will append the new data
@@ -225,6 +256,26 @@ public final class CaptureImage extends JPanel implements Runnable {
 
 	public void setPreviewready(Boolean previewready) {
 		this.previewready = previewready;
+	}
+
+	//convert color to a string that can be parsed //used for arff files
+	public String ColorToString(Color color){
+		
+		if(color == Color.white){
+			return "white";
+		}else if(color == Color.red){
+			return "red";
+		}else if(color == Color.green){
+			return "green";
+		}else if(color == Color.yellow){
+			return "yellow";
+		}else if(color == Color.orange){
+			return "orange";
+		}else if(color == Color.blue){
+			return "blue";
+		}
+		return null;
+		
 	}
 
 

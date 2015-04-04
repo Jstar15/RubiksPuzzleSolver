@@ -1,7 +1,12 @@
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
+
 package vision;
 
 import java.awt.*;
 
+//object used to hold RGB value of a pixel
 public class SquareColor {
     private int red;
     private int blue;

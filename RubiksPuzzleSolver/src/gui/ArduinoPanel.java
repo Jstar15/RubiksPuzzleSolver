@@ -1,3 +1,7 @@
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
+
 package gui;
 
 import java.awt.BorderLayout;
@@ -17,6 +21,7 @@ public class ArduinoPanel extends JPanel{
 	private String[] comports = { "COM1", "COM2", "COM3", "COM4", "COM5" };
 	private JComboBox<String> combolist = new JComboBox<>(comports);
 	
+	//gives user option to upload .ino file to arduino so the robot can solve the rubiks cube physically
 	public ArduinoPanel(){
 		setLayout(new BorderLayout());
 		setVisible(false);

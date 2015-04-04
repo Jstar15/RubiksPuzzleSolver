@@ -1,3 +1,7 @@
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
+
 package robotics;
 
 import java.io.BufferedWriter;
@@ -10,49 +14,17 @@ public class CreateArduinoSketch {
 	private StringBuilder s = new StringBuilder();							
 	private CubeObject cube = new CubeObject();
 	
+	//creates and arduino .ino file that the robot can use the face according to the required moves to solve the cube
 	public CreateArduinoSketch(String moves){
 		//moves = "Solution: F B2 U2 L' U2 F' R B2 R' D (14q, 10f)";  //example input
 		String[] movesarray = GetMovesFromStr(moves);
 		CreateAndSaveSketch(movesarray);
 	}
 	
-	private void MoveCube90Clockwise(){
-		s.append("MoveCube90Clockwise();");
-		cube.MoveCube90Clockwise();;
-	}
-	
-	private void MoveCube90AntiClockwise(){
-		s.append("MoveCube90AntiClockwise();");
-		cube.MoveCube90AntiClockwise();
-	}
-	private void MoveCube180(){
-		s.append("MoveCube180();");
-		cube.MoveCube180();
-	}
-	
-	private void RotateCube90Clockwise(){
-		s.append("RotateCube90Clockwise();");
-	}
-	
-	private void RotateCube90AntiClockwise(){
-		s.append("RotateCube90AntiClockwise();");
-	}
-	
-	private void RotateCube180(){
-		s.append("RotateCube180();");
-	}
-	
-	private void FlipCube(){
-		s.append("FlickOverCube();");
-		cube.FlipCube();
-	
-	}
-	
-	
+	//get string from string builder
 	private String getBuilderStr(){
 		return s.toString();
 	}
-	
 	
 	private String[] GetMovesFromStr(String moves){
 		int start = moves.indexOf(": ")+1;
@@ -61,11 +33,13 @@ public class CreateArduinoSketch {
 		return movearray;
 	}
 	
+	//get template for ardunino file and split
 	private String[] getSketchTemplate(){
 		String content = readFile("robot/SketchTemplate.txt");
 		return content.split("split here");
 	}
 	
+	//read file and return a string
 	private String readFile(String filename){
 	   String content = null;
 	   FileReader reader = null;
@@ -83,6 +57,7 @@ public class CreateArduinoSketch {
 	   return content;
 	}
 
+	//write a string to file
 	private void WriteToFile(String filename, String content){
 		BufferedWriter output = null;
         try {
@@ -96,6 +71,7 @@ public class CreateArduinoSketch {
   		}
 	}
 	
+	//generate arduino .ino file
 	private void CreateAndSaveSketch(String[] moves){
 		String[] sketchtemplate = getSketchTemplate();
 		
@@ -107,6 +83,7 @@ public class CreateArduinoSketch {
 		WriteToFile("robot/robot.ino",  getBuilderStr());
 	}
 	
+	//determine require moves for robot and append to string for ardunino ( .ino ) file creation
 	private void DetermineRobotMove(String move){
 		if(move.length()>0){
 			if(move.charAt(0) == 'F'){
@@ -132,7 +109,7 @@ public class CreateArduinoSketch {
 	}
 	
 	
-	
+	//determine next face and which moves are rquired
 	private void FromFaceToFace(char targetface){
 		if(targetface == cube.getDown()){
 			// do nothing 
@@ -153,6 +130,7 @@ public class CreateArduinoSketch {
 		}
 	}
 	
+	//turn face in a direction
 	private void TurnCubeFace(char targetface, String move){	
 		if(move.length() == 1){
 			RotateCube90Clockwise();
@@ -165,5 +143,38 @@ public class CreateArduinoSketch {
 				System.out.println("error unknown move");
 			}
 		}
+	}
+	
+	private void MoveCube90Clockwise(){
+		s.append("MoveCube90Clockwise();");
+		cube.MoveCube90Clockwise();;
+	}
+	
+	private void MoveCube90AntiClockwise(){
+		s.append("MoveCube90AntiClockwise();");
+		cube.MoveCube90AntiClockwise();
+	}
+	
+	private void MoveCube180(){
+		s.append("MoveCube180();");
+		cube.MoveCube180();
+	}
+	
+	private void RotateCube90Clockwise(){
+		s.append("RotateCube90Clockwise();");
+	}
+	
+	private void RotateCube90AntiClockwise(){
+		s.append("RotateCube90AntiClockwise();");
+	}
+	
+	private void RotateCube180(){
+		s.append("RotateCube180();");
+	}
+	
+	private void FlipCube(){
+		s.append("FlickOverCube();");
+		cube.FlipCube();
+	
 	}
 }

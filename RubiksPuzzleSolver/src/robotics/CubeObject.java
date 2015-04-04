@@ -1,5 +1,9 @@
-package robotics;
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
 
+package robotics;
+//class is used to track cube orientation when being manipulated by the cube solving robot in 3d
 public class CubeObject {
 	private char front = 'F';
 	private char up = 'U';

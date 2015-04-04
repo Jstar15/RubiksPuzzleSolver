@@ -1,3 +1,7 @@
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
+
 package vision;
 
 import java.awt.Color;
@@ -5,17 +9,18 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.meta.FilteredClassifier;
-import weka.classifiers.meta.RotationForest;
 import weka.core.Instances;
 import weka.filters.unsupervised.attribute.Remove;
  
+
+//predicts the color of the cube squares using weka based on a training set and test set (previously generated)
 public class WekaMachineLearning {
 	private ArrayList<Color> colorarray = new ArrayList<Color>();
 	
 	public WekaMachineLearning() throws Exception{
+		//open arff files as an instance
 		BufferedReader datafiletrain = readDataFile("weka/colortrain.arff");
 		Instances train = new Instances(datafiletrain);
 		train.setClassIndex(train.numAttributes() - 1);
@@ -26,9 +31,10 @@ public class WekaMachineLearning {
 		
 		Remove rm = new Remove();
 		rm.setAttributeIndices("1");  // remove 1st attribute
-		// classifier
-		//RotationForest model =	new RotationForest();
+		
+		// choose classifier
 		MultilayerPerceptron model =	new MultilayerPerceptron();
+		//RotationForest model =	new RotationForest();
 		
 
 		// meta-classifier
@@ -43,6 +49,7 @@ public class WekaMachineLearning {
 		 }
 	}	
 	
+	//read file and return as buffered reader
 	public static BufferedReader readDataFile(String filename) {
 		BufferedReader inputReader = null;
  
@@ -55,11 +62,11 @@ public class WekaMachineLearning {
 		return inputReader;
 	}
  
-
 	public ArrayList<Color> getColorarray() {
 		return colorarray;
 	}
 
+	//get color from color string
 	private Color getColorFromString(String strcolor){
 		Color color = null;
 		if(strcolor.equals("green")){

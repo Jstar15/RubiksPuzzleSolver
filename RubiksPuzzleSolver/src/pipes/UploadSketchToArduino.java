@@ -1,3 +1,7 @@
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
+
 package pipes;
 
 import java.io.BufferedReader;
@@ -8,6 +12,8 @@ public class UploadSketchToArduino {
 	private String output= null;
 	private String lastline = null;
 	private Boolean success = false;
+	
+	//calls and runs robot.ino file which can be used to solve the cube on the physical robot
 	public UploadSketchToArduino(String comport){
 		
 	    //get directory of created sketch file

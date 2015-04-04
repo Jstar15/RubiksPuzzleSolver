@@ -1,3 +1,7 @@
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
+
 package gui;
 
 import java.awt.BorderLayout;
@@ -12,6 +16,9 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
@@ -33,6 +40,9 @@ public class Gui extends JFrame {
 	private ArrayList<Color> colorarray;
 	private JButton updatebutton;
 	private int face;
+	private JMenuBar menubar;
+	private JButton previewtrainb = new JButton();
+	private JPanel bottomvisionpanel;
 	
 	//initiate JFrame
 	public static void main(String[] args) {
@@ -40,10 +50,12 @@ public class Gui extends JFrame {
 		frame.setVisible(true);
 	}
 
+	//setup basic layout and preferences for jframe
 	public Gui() {
 		
 		//setup  dimensions and settings
 		super("kociemba's sub-optimal cube algorithm");
+		createmenubar();
 		
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
@@ -51,7 +63,7 @@ public class Gui extends JFrame {
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    setSize(1200, 800);
 	    setLocationRelativeTo(null);
-	    setMinimumSize(new Dimension(1300, 940));
+	    setMinimumSize(new Dimension(1300, 960));
 
 	    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, CubePanel(), OutputPanel());
         splitPane.setResizeWeight(0.83);
@@ -61,7 +73,39 @@ public class Gui extends JFrame {
 		container.add(VisionPanel(), BorderLayout.EAST	);
 	}
 	
-	//output panel that will display output to the user 
+	//menu bar //allows toggle between training and normal mode
+	public void createmenubar(){
+		//create menu bar
+		menubar = new JMenuBar();
+        add(menubar);
+        
+        JMenu mode = new JMenu("Mode");
+        menubar.add(mode);
+
+        JMenuItem normalmode = new JMenuItem("Normal Mode");
+        normalmode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				ResetPreviewPanel();
+				ChangeVisionPanelMode(false);
+			}
+		});
+        
+        JMenuItem trainingmode = new JMenuItem("Training Mode");
+        trainingmode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				ResetPreviewPanel();
+				curCol = COLORS[0];
+				ChangeVisionPanelMode(true);
+			}
+		});
+        
+        mode.add(normalmode);
+        mode.add(trainingmode);
+      
+        setJMenuBar(menubar);
+	}
+	
+	//main title panel
 	private JPanel TitlePanel(){
 		
 		JPanel panel = new JPanel();
@@ -123,7 +167,7 @@ public class Gui extends JFrame {
 	} 
 		
 	
-	//this panel allows the user to input the location of ecahc colotr on the rubiks cube
+	//this panel allows the user to input the location of a color on the cube manually
 	private JPanel CubePanel() {
 		int FSIZE = 60;
 		int[] XOFF = { 4, 7, 4, 4, 1, 10 };
@@ -131,6 +175,7 @@ public class Gui extends JFrame {
 		
 		JPanel panel = new JPanel();
 		
+		//generate cube squares then style and position them
 		for (int i = 0; i < 6; i++)
 			for (int j = 0; j < 9; j++) {
 				facelet[i][j] = new JButton();
@@ -146,11 +191,14 @@ public class Gui extends JFrame {
 				});
 			}
 		
+		//set texts on the center of each cube representing a unique face
 		String[] txt = { "U", "R", "F", "D", "L", "B" };
-		
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 6; i++){
 			facelet[i][4].setText(txt[i]);
+		}
 		
+		
+		//generate color options and listener
 		for (int i = 0; i < 6; i++) {
 			colorSel[i] = new JButton();
 			getContentPane().add(colorSel[i]);
@@ -160,7 +208,8 @@ public class Gui extends JFrame {
 			colorSel[i].setName("" + i);
 			colorSel[i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
-					curCol = COLORS[Integer.parseInt(((JButton) evt.getSource()).getName())];
+					curCol = COLORS[Integer.parseInt(((JButton) evt.getSource()).getName())];  //get color selection
+					previewtrainb.setBackground(curCol);
 				}
 			});
 		}
@@ -192,7 +241,6 @@ public class Gui extends JFrame {
 		    }
 		});
 		
-		
 		getContentPane().add(arduinopanel);
 		
 		return panel;
@@ -200,13 +248,14 @@ public class Gui extends JFrame {
 
 	//take the users input and parse it into a string where it can be passed to the cube solving algorithm 
 	private void solveCube() {
-		
 		StringBuffer s = new StringBuffer(54);
 
-		for (int i = 0; i < 54; i++)
+		for (int i = 0; i < 54; i++){
 			s.insert(i, 'B');// default initialization
-		for (int i = 0; i < 6; i++)
-			// read the 54 facelets
+		}
+		
+		// read the 54 facelets and append to stringbuffer
+		for (int i = 0; i < 6; i++){
 			for (int j = 0; j < 9; j++) {
 				if (facelet[i][j].getBackground() == facelet[0][4].getBackground())
 					s.setCharAt(9 * i + j, 'U');
@@ -221,20 +270,15 @@ public class Gui extends JFrame {
 				if (facelet[i][j].getBackground() == facelet[5][4].getBackground())
 					s.setCharAt(9 * i + j, 'B');
 			}
-		
-		String formatedstate = FormatStringForCubeState(s.toString());
-		RunCommand c = new RunCommand("miker/miker.exe", formatedstate );
-		textArea.setText(c.getSolution());
-		if(c.getSuccess()){
-			new CreateArduinoSketch(c.getSolution());
-			arduinopanel.setVisible(true);
-		}else{
-			arduinopanel.setVisible(false);
 		}
-
+		
+		//organise cube string into input that the cube solving program can read
+		String formatedstate = FormatStringForCubeState(s.toString());
+		CallCubeSolvingProgram(formatedstate); 
 	}
 	
 	
+	//This panel contains all vision features such webcam output, preview and controls
 	private JPanel VisionPanel(){
 		
 		JPanel visionpanel = new JPanel();
@@ -267,23 +311,47 @@ public class Gui extends JFrame {
 		toppanels.add(panel, BorderLayout.NORTH);
 		toppanels.add(previewpanel, BorderLayout.CENTER);
 			
+		bottomvisionpanel = new JPanel();
+		bottomvisionpanel.setLayout(new BorderLayout());
+		bottomvisionpanel.add(CubeOptionForVision(), BorderLayout.CENTER);
+		bottomvisionpanel.add(VisionControlPanel(), BorderLayout.SOUTH);
+		
 		visionpanel.add(toppanels, BorderLayout.NORTH);
-		visionpanel.add(CubeOptionForVision(), BorderLayout.CENTER);
-		visionpanel.add(VisionControlPanel(), BorderLayout.SOUTH);
+		visionpanel.add(bottomvisionpanel, BorderLayout.CENTER);
 		
 		return visionpanel;
 	}
 	
+	//switch between training mode and normal mode
+	public void ChangeVisionPanelMode(Boolean trainmode){
+		bottomvisionpanel.removeAll();
+		if(trainmode){
+			bottomvisionpanel.add(CubeOptionTrainingVision(), BorderLayout.CENTER);
+			bottomvisionpanel.add(VisionTrainingPanel(), BorderLayout.SOUTH);
+		}else{
+			bottomvisionpanel.add(CubeOptionForVision(), BorderLayout.CENTER);
+			bottomvisionpanel.add(VisionControlPanel(), BorderLayout.SOUTH);
+		}
+		
+		bottomvisionpanel.revalidate();
+		bottomvisionpanel.repaint();
+
+		
+	}
+	
+	//options and buttons to control vision panel
 	private JPanel VisionControlPanel(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
+		
 		JButton analysebutton = new JButton(" Analyse ");
 		analysebutton.setFocusable(false);
 		analysebutton .addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				 ResetVisionOptionPanel();
 				 updatebutton.setEnabled(false);
-				 CapturePixels();
+				 CapturePixels(false);
+				 EnableorDisableFaceSelection(true);
 			}
 		});
 		
@@ -324,6 +392,51 @@ public class Gui extends JFrame {
 		panel.add( updatepanel, BorderLayout.CENTER);
 		panel.add( resetbutton, BorderLayout.EAST);
 		
+		return panel;
+		
+	}
+	
+	//buttons for vision panel when training
+	private JPanel VisionTrainingPanel(){
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+		
+		JButton analysebutton = new JButton(" Train ");
+		analysebutton.setFocusable(false);
+		analysebutton .addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				 CapturePixels(true);
+			}
+		});
+		
+		panel.add( new JLabel("  "), BorderLayout.WEST);
+		panel.add( analysebutton, BorderLayout.CENTER);
+		panel.add( new JLabel("  "), BorderLayout.EAST);
+		
+		return panel;
+	}
+	
+	//panel showing preview of color selection for training
+	private JPanel CubeOptionTrainingVision(){
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+		panel.setBorder(new EmptyBorder(20, 20, 0, 20));
+		
+		JLabel label = new JLabel("Select a color for training    >>>");
+		JPanel previewpanel = new JPanel();
+		previewpanel.setLayout(new BorderLayout());
+		
+		previewtrainb = new JButton();
+		previewtrainb.setPreferredSize(new Dimension(60, 50));
+		previewtrainb.setEnabled(false);
+		previewtrainb.setOpaque(true);
+		previewtrainb.setBackground(Color.white);
+		previewtrainb.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+		previewpanel.add( label, BorderLayout.WEST);
+		previewpanel.add( previewtrainb, BorderLayout.EAST);
+		
+		panel.add( previewpanel, BorderLayout.NORTH);
+
 		return panel;
 		
 	}
@@ -370,6 +483,7 @@ public class Gui extends JFrame {
 		return panel;
 	} 
 	
+	//panel showing preview of predicted square colors for vision
 	private JPanel PreviewPanel(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -404,13 +518,27 @@ public class Gui extends JFrame {
 		return panel;
 	}
 	
+	//call cube solving program using RunCommand class
+	private void CallCubeSolvingProgram (String state){
+		RunCommand c = new RunCommand("miker/miker.exe", state );
+		textArea.setText(c.getSolution());
+		if(c.getSuccess()){
+			new CreateArduinoSketch(c.getSolution());
+			arduinopanel.setVisible(true);
+		}else{
+			arduinopanel.setVisible(false);
+		}
+	}
+	
+	
+	//update a face based on predicted square colors for vision
 	private void InputCubeFaceFromArray(int face, ArrayList<Color> colorarray){
 		for (int x = 0; x < colorarray.size(); x++) {
 			facelet[face][x].setBackground(colorarray.get(x));
 		}
 	}
 	
-	//retrieve cube state and execute cube program and motors
+	//reset cube state input to default
 	private void ResetCubeState() {
 		for (int i = 0; i < 6; i++){
 			for (int j = 0; j < 9; j++) {
@@ -422,6 +550,7 @@ public class Gui extends JFrame {
 		arduinopanel.setVisible(false);
 	}
 	
+	//reset vision option panel to default
 	private void ResetVisionOptionPanel(){
 		for (int i = 0; i < 6; i++) {
 			selectionfacelet[i].setBackground(Color.gray);
@@ -430,6 +559,7 @@ public class Gui extends JFrame {
 		}
 	}
 	
+	//reset preview for vision to default
 	private void ResetPreviewPanel(){
 		for (int i = 0; i < 9; i++) {
 			pfacelet[i].setBackground(Color.gray);
@@ -438,11 +568,14 @@ public class Gui extends JFrame {
 		}
 	}
 	
+	//enable or disable button clicks for face selection in vision panel normal mode
 	private void EnableorDisableFaceSelection(Boolean boo){
 		for (int i = 0; i < 6; i++) {
 			selectionfacelet[i].setEnabled(boo);
 		}
 	}
+	
+	//flip array because image was originally flipped for preview purposes.
 	private ArrayList<Color> FlipColorArray(ArrayList<Color> arraylist){
 		ArrayList<Color> flippedarraylist = new ArrayList<Color>( arraylist);
 		flippedarraylist.set(0, arraylist.get(2));
@@ -455,7 +588,7 @@ public class Gui extends JFrame {
 		return flippedarraylist;
 	}
 	
-	//sorts string array into a format taht can be passed to solver program
+	//sorts string array into a format that can be passed to the solver program
 	private String FormatStringForCubeState(String cubestr){
 		int[][] indexorder ={{7, 19},{5, 10},{1, 46},{3, 37},{28, 25},{32, 16},{34, 52},{30, 43},{23, 12},{21, 41},{48, 14},{50, 39},	
 				{8, 20, 9},{2, 11, 45},{0, 47, 36},{6, 38, 18},{29, 15, 26},{27, 24, 44}, {33, 42, 53},{35, 51, 17}};
@@ -471,9 +604,12 @@ public class Gui extends JFrame {
 		return sb.toString();
 		
 	}
-	private void CapturePixels(){
-		win.CapturePixels();
+	
+	//get image and show in preview for vision panel
+	private void CapturePixels(Boolean training){
+		win.CapturePixels(training, curCol);
 		
+		//break loop when colorarray when preview is ready
 		while(true){
 	    	try {
 				Thread.sleep(50);
@@ -487,12 +623,14 @@ public class Gui extends JFrame {
 	    	}
 		}
 
+		//set background to preview panel for vision color detection
 		for (int i = 0; i < colorarray.size(); i++) {
 			pfacelet[i].setBackground(colorarray.get(i));
 		}
-		EnableorDisableFaceSelection(true);
+	
 	}
 	
+	//convert face side string to an int // used with Color[] COLORS global variable
 	private int FaceSelectionToInt(String face){
 		if(face.equals("U")){
 			return 0;
@@ -509,9 +647,5 @@ public class Gui extends JFrame {
 		}else{
 			return -1;
 		}
-
-		
 	}
-
-	
 }

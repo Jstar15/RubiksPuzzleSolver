@@ -1,3 +1,7 @@
+//Created By Jordan Waddell
+//Final year project
+//Solving A Rubiks Cube Using Robotics And Vision
+
 package pipes;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +11,8 @@ import java.io.InputStreamReader;
 public class RunCommand {
 	private String solution = null;
 	private Boolean success = false;
+	
+	//calls and runs a program from command line // in this case it would be mikers cube solving c program
 	public RunCommand(String command, String cubestate){
 		try {
 			//cubestate = "UF,UR,UB,UL,LB,DB,DL,RD,FR,FL,DF,BR,LDF,RDB,DLB,RUF,LUB,DRF,FUL,BUR,";  //example cube state input
