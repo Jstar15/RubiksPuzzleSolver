@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -19,9 +20,11 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
+
 import pipes.RunCommand;
 import robotics.CreateArduinoSketch;
 import vision.CaptureImage;
@@ -43,6 +46,7 @@ public class Gui extends JFrame {
 	private JMenuBar menubar;
 	private JButton previewtrainb = new JButton();
 	private JPanel bottomvisionpanel;
+	private JPanel visionpanel;
 	
 	//initiate JFrame
 	public static void main(String[] args) {
@@ -68,9 +72,17 @@ public class Gui extends JFrame {
 	    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, CubePanel(), OutputPanel());
         splitPane.setResizeWeight(0.83);
         splitPane.setOpaque(false);
+        
+        if(win.getWebcamavailable()){
+             visionpanel = VisionPanel();
+        }else{
+        	 visionpanel = new JPanel();
+        	 JOptionPane.showMessageDialog(null, "Webcam not detected, vision functionality has been disabled", "Warning",JOptionPane.WARNING_MESSAGE);
+        }
+
 		container.add(TitlePanel(), BorderLayout.NORTH	);
 		container.add(splitPane, BorderLayout.CENTER);
-		container.add(VisionPanel(), BorderLayout.EAST	);
+		container.add(visionpanel,  BorderLayout.EAST	);
 	}
 	
 	//menu bar //allows toggle between training and normal mode
