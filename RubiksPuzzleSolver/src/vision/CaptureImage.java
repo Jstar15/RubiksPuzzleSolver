@@ -96,6 +96,7 @@ public final class CaptureImage extends JPanel implements Runnable {
         
         //flip image 
         image = flipVertical(image);
+        image = image.getSubimage(60, 0, image.getWidth()-140, image.getHeight());
         
         //increase brightness and contrast on image
         RescaleOp rescaleOp = new RescaleOp(2f, 20, null);
@@ -104,7 +105,18 @@ public final class CaptureImage extends JPanel implements Runnable {
         //if user requests to capture a cube face state
         if(capturepixelrgb == true){
         	//split image and run weka using created trainging set
-        	BufferedImage imgs[] = splitImage(image);
+        	BufferedImage imgs[] = splitImage(image,3 ,3 );
+        	int count=0;
+        	for(BufferedImage b : imgs){
+            	File outputfile = new File(count + "image.jpg");
+            	try {
+					ImageIO.write(b, "jpg", outputfile);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            	count++;
+        	}
+
         	PrepareArffFiles(imgs);
         	capturepixelrgb = false;
             try {
@@ -128,7 +140,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(image, 0, 0, 400, 300, null);          
+        g.drawImage(image, 0, 0, 305, 305, null);          
         g.drawImage(template, 0, 0, 310, 300, null);     
     }   
     
@@ -170,12 +182,10 @@ public final class CaptureImage extends JPanel implements Runnable {
 
     
     //split image in 9 quadrants (quadrant per cube square)
-    private  BufferedImage[] splitImage(BufferedImage image) {
-        int rows = 3; //You should decide the values for rows and cols variables
-        int cols = 3;
+    private  BufferedImage[] splitImage(BufferedImage image, int rows, int cols) {
         int chunks = rows * cols;
 
-        int chunkWidth = (image.getWidth()-150) / cols; // determines the chunk width and height
+        int chunkWidth = (image.getWidth()) / cols; // determines the chunk width and height
         int chunkHeight = image.getHeight() / rows;
         int count = 0;
         BufferedImage imgs[] = new BufferedImage[chunks]; //Image array to hold image chunks
@@ -187,6 +197,8 @@ public final class CaptureImage extends JPanel implements Runnable {
                 Graphics2D gr = imgs[count++].createGraphics();
                 gr.drawImage(image, 0, 0, chunkWidth, chunkHeight, chunkWidth * y, chunkHeight * x, chunkWidth * y + chunkWidth, chunkHeight * x + chunkHeight, null);
                 gr.dispose();
+                
+                
             }
         }
         return imgs;
@@ -198,7 +210,7 @@ public final class CaptureImage extends JPanel implements Runnable {
     	
         //writing images to .Arff file for either traning or test set
         for (int i = 0; i < imgs.length; i++) {
-            imgs[i] = cropImage(imgs[i]);
+           // imgs[i] = cropImage(imgs[i]);
             ArrayList<SquareColor> colorarray = getPixelArrayFromImage(imgs[i]);
             
             if(training){
