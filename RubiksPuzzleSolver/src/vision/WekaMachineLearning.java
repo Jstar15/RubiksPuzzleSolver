@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.lazy.IB1;
 import weka.classifiers.lazy.IBk;
@@ -41,11 +40,10 @@ public class WekaMachineLearning {
 		// choose classifier
 		IB1 model =	new IB1();
 		
+		//ALTERNATIVE CLASSIFIER
 		//RotationForest model =	new RotationForest();
 		//model.setClassifier(new RandomTree());
-		//model.setNumIterations(10);
-
-		
+		//model.setNumIterations(5);
 
 		// meta-classifier
 		FilteredClassifier fc = new FilteredClassifier();
@@ -73,6 +71,7 @@ public class WekaMachineLearning {
 		return inputReader;
 	}
  
+	//return predictions in color array
 	public ArrayList<Color> getColorarray() {
 		return colorarray;
 	}

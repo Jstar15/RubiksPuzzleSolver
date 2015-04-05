@@ -96,7 +96,7 @@ public final class CaptureImage extends JPanel implements Runnable {
         
         //flip image 
         image = flipVertical(image);
-        image = image.getSubimage(60, 0, image.getWidth()-140, image.getHeight());
+        image = image.getSubimage(60, 0, image.getWidth()-150, image.getHeight());
         
         //increase brightness and contrast on image
         RescaleOp rescaleOp = new RescaleOp(2f, 20, null);
@@ -106,19 +106,9 @@ public final class CaptureImage extends JPanel implements Runnable {
         if(capturepixelrgb == true){
         	//split image and run weka using created trainging set
         	BufferedImage imgs[] = splitImage(image,3 ,3 );
-        	int count=0;
-        	for(BufferedImage b : imgs){
-            	File outputfile = new File(count + "image.jpg");
-            	try {
-					ImageIO.write(b, "jpg", outputfile);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-            	count++;
-        	}
-
         	PrepareArffFiles(imgs);
         	capturepixelrgb = false;
+        	
             try {
     			WekaMachineLearning w = new WekaMachineLearning();
     			colorarray = w.getColorarray();
@@ -178,9 +168,6 @@ public final class CaptureImage extends JPanel implements Runnable {
     }
     
 
-
-
-    
     //split image in 9 quadrants (quadrant per cube square)
     private  BufferedImage[] splitImage(BufferedImage image, int rows, int cols) {
         int chunks = rows * cols;
