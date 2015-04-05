@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class Statistics {
 
 	private SquareColor mean;
-	private SquareColor stddev;
 	private SquareColor varience;
     
     private  ArrayList<SquareColor> data;
@@ -22,15 +21,10 @@ public class Statistics {
         size = data.size();
         DetermineMean();
         DetermineVariance();
-        DetermineStdDev();
     }
 
     public SquareColor getMean() {
 		return mean;
-	}
-
-	public SquareColor getStddev() {
-		return stddev;
 	}
 
 	public SquareColor getVarience() {
@@ -77,13 +71,4 @@ public class Statistics {
     	varience = new SquareColor(red, blue, green);
     }
 
-    private void DetermineStdDev() {
-    	
-    	double red = Math.sqrt(varience.getRed());
-    	double blue = Math.sqrt(varience.getBlue());
-    	double green =	Math.sqrt(varience.getGreen());
-    	
-    	stddev = new SquareColor(red, blue, green);
-    	
-    }
 }

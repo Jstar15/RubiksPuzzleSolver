@@ -33,6 +33,9 @@ public final class CaptureImage extends JPanel implements Runnable {
     private Boolean previewready = false;
     private Boolean training;
     private Color trainingcolor;
+    private Boolean webcamavailable = false;
+    
+
 	public CaptureImage() {
     	setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.BLACK));
         init();
@@ -41,6 +44,9 @@ public final class CaptureImage extends JPanel implements Runnable {
     public void init() {      
     	System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         cap = new VideoCapture(0); // 1st webcam
+        if(cap.isOpened()){
+        	webcamavailable = true;
+        } 
     }
 
     public void start() {
@@ -159,27 +165,10 @@ public final class CaptureImage extends JPanel implements Runnable {
 		return  colorarray;
     }
     
-    //get average pixels for RGB values in an array
-    private  SquareColor getAveragePixelFromImageArray( ArrayList<SquareColor> colorarray){
-    	int red = 0;
-    	int blue = 0;
-    	int green =0;
-    	int count = 0;
-    	for(SquareColor c : colorarray){
-    		red += c.getRed();
-    		blue += c.getBlue();
-    		green += c.getGreen();
-    		count++;
-    	}
-    	
-    	red = red / count;
-    	blue = blue / count;
-    	green = green / count;
-    	
-		return new SquareColor(red, blue, green);
-    }
-    
 
+
+
+    
     //split image in 9 quadrants (quadrant per cube square)
     private  BufferedImage[] splitImage(BufferedImage image) {
         int rows = 3; //You should decide the values for rows and cols variables
@@ -210,16 +199,16 @@ public final class CaptureImage extends JPanel implements Runnable {
         //writing images to .Arff file for either traning or test set
         for (int i = 0; i < imgs.length; i++) {
             imgs[i] = cropImage(imgs[i]);
-            SquareColor avgsquarecolor = getAveragePixelFromImageArray( getPixelArrayFromImage(imgs[i]) );
+            ArrayList<SquareColor> colorarray = getPixelArrayFromImage(imgs[i]);
             
             if(training){
-                SaveImageDataToArffFile("weka/colortrain.arff",  ColorToString(trainingcolor),  avgsquarecolor, true); //for buuilding traijnig set only
+                SaveImageDataToArffFile("weka/colortrain.arff",  ColorToString(trainingcolor),  colorarray, true); //for buuilding traijnig set only
             }
 
             if(i == 0){
-                SaveImageDataToArffFile("weka/colortest.arff", "unknown",  avgsquarecolor, false);
+                SaveImageDataToArffFile("weka/colortest.arff", "unknown",  colorarray, false);
             }else{
-            	SaveImageDataToArffFile("weka/colortest.arff", "unknown",  avgsquarecolor, true);
+            	SaveImageDataToArffFile("weka/colortest.arff", "unknown",  colorarray, true);
             }
         }
     }
@@ -235,28 +224,33 @@ public final class CaptureImage extends JPanel implements Runnable {
     }
     
     //save prepares string to an .arff files based on criteria ( arg )
-    private void SaveImageDataToArffFile(String filename, String color,  SquareColor square, Boolean append){
-    	String header = "@relation color\n@attribute avgblue numeric\n@attribute avgred numeric\n@attribute avggreen numeric\n@attribute class {red,blue,green,orange,yellow,white,unknown}\n\n@data\n";
+    private void SaveImageDataToArffFile(String filename, String color,  ArrayList<SquareColor> colorarray, Boolean append){
+    	
+    	//get statistics from pixel array
+        Statistics s = new Statistics(colorarray);
+        SquareColor avg = s.getMean();
+        SquareColor varience = s.getVarience();
+        
+    	String header = "@relation color\n"+
+    	"@attribute avgblue numeric\n@attribute avgred numeric\n@attribute avggreen numeric\n" + 
+    	"@attribute varblue numeric\n@attribute varred numeric\n@attribute vargreen numeric\n" + 
+    			"\n@attribute class {red,blue,green,orange,yellow,white,unknown}\n"+
+    			"\n@data\n";
     	try{
     	    FileWriter fw = new FileWriter(filename, append); //the true will append the new data
     	    if(!append){
     	    	fw.write(header);
     	    }
-    	    fw.write(square.getBlue()+","+ square.getRed()+"," +square.getGreen()+","+color+"\n");//appends the string to the file
+    	    
+    	    fw.write(avg.getBlue()+","+ avg.getRed()+"," +avg.getGreen()+",");//appends the string to the file
+    	    fw.write(varience.getBlue()+","+ varience.getRed()+"," +varience.getGreen()+","+color+"\n");//appends the string to the file
+    	    
     	    fw.close();
     	}
     	catch(IOException ioe){
     	    System.out.println("IOException: " + ioe.getMessage());
     	}
     }
-    
-    public Boolean getPreviewready() {
-		return previewready;
-	}
-
-	public void setPreviewready(Boolean previewready) {
-		this.previewready = previewready;
-	}
 
 	//convert color to a string that can be parsed //used for arff files
 	public String ColorToString(Color color){
@@ -278,8 +272,15 @@ public final class CaptureImage extends JPanel implements Runnable {
 		
 	}
 
+	public Boolean getWebcamavailable() {
+		return webcamavailable;
+	}
+	
+    public Boolean getPreviewready() {
+		return previewready;
+	}
 
-    
-    
-    
+	public void setPreviewready(Boolean previewready) {
+		this.previewready = previewready;
+	}
 }

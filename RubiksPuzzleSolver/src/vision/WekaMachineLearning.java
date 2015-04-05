@@ -9,8 +9,14 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+
 import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.lazy.IB1;
+import weka.classifiers.lazy.IBk;
 import weka.classifiers.meta.FilteredClassifier;
+import weka.classifiers.meta.RotationForest;
+import weka.classifiers.trees.J48;
+import weka.classifiers.trees.RandomTree;
 import weka.core.Instances;
 import weka.filters.unsupervised.attribute.Remove;
  
@@ -33,14 +39,19 @@ public class WekaMachineLearning {
 		rm.setAttributeIndices("1");  // remove 1st attribute
 		
 		// choose classifier
-		MultilayerPerceptron model =	new MultilayerPerceptron();
+		IB1 model =	new IB1();
+		
 		//RotationForest model =	new RotationForest();
+		//model.setClassifier(new RandomTree());
+		//model.setNumIterations(10);
+
 		
 
 		// meta-classifier
 		FilteredClassifier fc = new FilteredClassifier();
 		fc.setFilter(rm);
 		fc.setClassifier(model);
+		
 		// train and make predictions
 		fc.buildClassifier(train);
 		for (int i = 0; i < test.numInstances(); i++) {
