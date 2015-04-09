@@ -229,10 +229,12 @@ public final class CaptureImage extends JPanel implements Runnable {
         Statistics s = new Statistics(colorarray);
         SquareColor avg = s.getMean();
         SquareColor varience = s.getVarience();
-        
+        SquareColor median = s.getMedian();
+        System.out.println(median.getBlue());
     	String header = "@relation color\n"+
     	"@attribute avgblue numeric\n@attribute avgred numeric\n@attribute avggreen numeric\n" + 
     	"@attribute varblue numeric\n@attribute varred numeric\n@attribute vargreen numeric\n" + 
+    	"@attribute midblue numeric\n@attribute midred numeric\n@attribute midgreen numeric\n" + 
     			"\n@attribute class {red,blue,green,orange,yellow,white,unknown}\n"+
     			"\n@data\n";
     	try{
@@ -241,9 +243,9 @@ public final class CaptureImage extends JPanel implements Runnable {
     	    	fw.write(header);
     	    }
     	    
-    	    fw.write(avg.getBlue()+","+ avg.getRed()+"," +avg.getGreen()+",");//appends the string to the file
-    	    fw.write(varience.getBlue()+","+ varience.getRed()+"," +varience.getGreen()+","+color+"\n");//appends the string to the file
-    	    
+    	    fw.write(avg.getBlue()+","+ avg.getRed()+"," +avg.getGreen()+",");//appends averages to the file
+    	    fw.write(varience.getBlue()+","+ varience.getRed()+"," +varience.getGreen()+",");//appends variances to file
+    	    fw.write(median.getBlue()+","+ median.getRed()+"," +median.getGreen()+","+color+"\n");//appends medians to file
     	    fw.close();
     	}
     	catch(IOException ioe){

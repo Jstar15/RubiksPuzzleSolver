@@ -5,12 +5,14 @@
 package vision;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 //determines the mean, std dev and varience for an arrayList of SquareColor(rgb values), //each rgb value represents a pixel in an image
 public class Statistics {
 
 	private SquareColor mean;
 	private SquareColor varience;
+	private SquareColor median;
     
     private  ArrayList<SquareColor> data;
     
@@ -19,8 +21,10 @@ public class Statistics {
     public Statistics(ArrayList<SquareColor>  data) {
     	this.data = data;
         size = data.size();
+        
         DetermineMean();
         DetermineVariance();
+        DetermineMedian();
     }
 
     public SquareColor getMean() {
@@ -29,6 +33,11 @@ public class Statistics {
 
 	public SquareColor getVarience() {
 		return varience;
+	}
+
+	
+	public SquareColor getMedian() {
+		return median;
 	}
 
 	private void DetermineMean() {
@@ -69,6 +78,36 @@ public class Statistics {
     	green = green / size;
     	
     	varience = new SquareColor(red, blue, green);
+    }
+    
+    private void DetermineMedian(){
+    	ArrayList<Double> redarray = new ArrayList<Double>();
+    	ArrayList<Double> bluearray= new ArrayList<Double>();
+    	ArrayList<Double> greenarray= new ArrayList<Double>();
+    	
+    	for(SquareColor c : data){
+    		redarray.add(c.getRed());
+    		bluearray.add(c.getBlue());
+    		greenarray.add(c.getGreen());
+    	}
+    	Collections.sort(redarray);
+    	Collections.sort(bluearray);
+    	Collections.sort(greenarray);
+    	
+    	double red = getMedianFromArray(redarray);;
+    	double blue = getMedianFromArray(bluearray);;
+    	double green =getMedianFromArray(greenarray);;
+
+    	median = new SquareColor(red, blue, green);
+    }
+    
+    private Double getMedianFromArray(ArrayList<Double> array){
+    	if(size == 0){
+    		return (double) 0;
+    	}if(size % 2 == 1){ //odd number 
+    		return array.get((int) (size/2));
+    	}
+    	return (array.get((int) ((size / 2)-1)) + array.get((int) (size / 2))) / 2;
     }
 
 }
