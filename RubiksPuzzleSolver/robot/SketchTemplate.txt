@@ -38,84 +38,70 @@ while(1);
 }
 
 
-//roate a face on the cube 90 degrees clockwise
-void RotateCube90Clockwise(){
-ArmUpClockwise();
-  digitalWrite(dir_b, LOW); 
-  bstart();
-  delay(3500);
 
+//rotate a face on the cube 90 degrees clockwise
+void RotateCube90Clockwise(){
+  ArmUpClockwise();  //move arm up to hold cube in place
+  digitalWrite(dir_b, LOW);   //set direction of cube face to anticlockwise
+  bstart(); // start cube face movement
+  delay(7000); //wait
   while(true){
-    delay(50);
-    val = analogRead(analogPin);    // read the input pin
-    val2 = analogRead(analogPin2);    // read the input pin
+    val = analogRead(analogPin);    // read the analog input pin
+    val2 = analogRead(analogPin2);    // read the analog input pin
     if (val > 800 || val2 > 600) { //when sensor reaches these values stop rotation cube
-      delay(600);
       bstop();
       delay(500);
       ArmDown();
       delay(500);
-      digitalWrite(dir_b, HIGH); 
-      bstart();
-      delay(500);
-      bstop();
-      break;
+      break; //break once move is finished
     }
   }  
 }
 
 //rotate a face on the cube 90 degrees anti clockwise
 void RotateCube90AntiClockwise(){
-  ArmUpAntiClockwise();
-  digitalWrite(dir_b, HIGH); 
-  bstart();
-  delay(3500);
-
+  ArmUpAntiClockwise();  //move arm up to hold cube in place
+  digitalWrite(dir_b, HIGH);   //set direction of cube face to anticlockwise
+  bstart(); // start cube face movement
+  delay(4500); //wait
   while(true){
-    delay(50);
-    val = analogRead(analogPin);    // read the input pin
-    val2 = analogRead(analogPin2);    // read the input pin
-    if (val > 800 || val2 > 600) {
-      delay(900);
+    val = analogRead(analogPin);    // read the analog input pin
+    val2 = analogRead(analogPin2);    // read the analog input pin
+    if (val > 800 || val2 > 600) { //when sensor reaches these values stop rotation cube
+      delay(1100); //wait
       bstop();
       delay(500);
       ArmDown();
-      delay(500);
-      digitalWrite(dir_b, LOW); 
+     digitalWrite(dir_b, LOW);   
       bstart();
-      delay(300);
-      bstop();
-      break;
-      break;
+      delay(500);
+       bstop();
+      break; //break once move is finished
     }
   }  
 }
 
 //rotate face on cube 180 degrees
 void RotateCube180(){
-  ArmUpAntiClockwise();
-  digitalWrite(dir_b, HIGH); 
-  bstart();
-  delay(7500);
-
+  ArmUpAntiClockwise();  //move arm up to hold cube in place
+  digitalWrite(dir_b, HIGH);   //set direction of cube face to anticlockwise
+  bstart(); // start cube face movement
+  delay(8000); //wait
   while(true){
-    delay(50);
-    val = analogRead(analogPin);    // read the input pin
-    val2 = analogRead(analogPin2);    // read the input pin
-    if (val > 800 || val2 > 600) {
-      delay(900);
+    val = analogRead(analogPin);    // read the analog input pin
+    val2 = analogRead(analogPin2);    // read the analog input pin
+    if (val > 800 || val2 > 600) { //when sensor reaches these values stop rotation cube
+      delay(1100); //wait
       bstop();
       delay(500);
       ArmDown();
-      delay(500);
-      digitalWrite(dir_b, LOW); 
+     digitalWrite(dir_b, LOW);   
       bstart();
-      delay(300);
-      bstop();
-      break;
-      break;
+      delay(500);
+       bstop();
+      break; //break once move is finished
     }
-  }   
+  }  
 }
 
 
@@ -129,12 +115,7 @@ void ArmUpAntiClockwise(){
   
   bstart();
   digitalWrite(dir_b, LOW); 
-  delay(600);
-  digitalWrite(dir_b, HIGH); 
-  delay(800);
-  digitalWrite(dir_b, LOW); 
-  delay(900);  
-
+  delay(500);  
   bstop();
 }
 
@@ -142,19 +123,14 @@ void ArmUpAntiClockwise(){
 //move arm up that hold the top part of cube in place
 void ArmUpClockwise(){
   analogWrite(pwm_a, 255);
-  
+ 
   astart();
   digitalWrite(dir_a, LOW); 
-  delay(1000);
+  delay(900);  
   
   bstart();
   digitalWrite(dir_b, HIGH); 
-  delay(600);
-  digitalWrite(dir_b, LOW); 
-  delay(800);
-  digitalWrite(dir_b, HIGH); 
   delay(900);  
-
   bstop();
 }
 
@@ -165,6 +141,8 @@ void ArmDown(){
   delay(800);
   analogWrite(pwm_a, 30);
   delay(400);
+    analogWrite(pwm_a, 200);
+     delay(400);
   astop();
 }
 
