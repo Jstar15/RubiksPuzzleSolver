@@ -230,7 +230,7 @@ public final class CaptureImage extends JPanel implements Runnable {
         SquareColor avg = s.getMean();
         SquareColor varience = s.getVarience();
         SquareColor median = s.getMedian();
-        System.out.println(median.getBlue());
+
     	String header = "@relation color\n"+
     	"@attribute avgblue numeric\n@attribute avgred numeric\n@attribute avggreen numeric\n" + 
     	"@attribute varblue numeric\n@attribute varred numeric\n@attribute vargreen numeric\n" + 

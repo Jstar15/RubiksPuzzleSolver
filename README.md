@@ -1,7 +1,7 @@
 # RubiksPuzzleSolver
-Solve a rubiks cube using vision and robotics
+Solve a rubiks cube using vision and robotics. 
 
-## System Requirements Tested using: 
+## System Requirements: 
 
 Operating System:Microsoft Windows 7 (x64)
 
@@ -9,15 +9,19 @@ Software:
 
 OpenCV 3.0 beta
  
-## Hardware Requirements Tested using: 
+## Hardware Requirements: 
 
-Webcam: Logitech QuickCam Pro 3000 (vision capability's)
+Webcam: tested using a Logitech QuickCam Pro 3000 
 
 Arduino Robot
 
 ## Usage
 
-TODO: Write usage instructions
+to start the application run Gui.java located in the src/gui/ package
+
+###Normal Mode
+
+###Training Mode
 
 ## Credits
 

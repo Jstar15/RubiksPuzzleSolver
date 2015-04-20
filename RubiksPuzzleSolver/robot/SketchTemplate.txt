@@ -86,7 +86,7 @@ void RotateCube180(){
   ArmUpAntiClockwise();  //move arm up to hold cube in place
   digitalWrite(dir_b, HIGH);   //set direction of cube face to anticlockwise
   bstart(); // start cube face movement
-  delay(8000); //wait
+  delay(8500); //wait
   while(true){
     val = analogRead(analogPin);    // read the analog input pin
     val2 = analogRead(analogPin2);    // read the analog input pin
