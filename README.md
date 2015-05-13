@@ -7,6 +7,8 @@ Operating System: Microsoft Windows 7 (x64)
 
 ## Software Requirements:
 
+Eclipse IDE (or alternative)
+
 OpenCV 3.0 beta (environmental variables must be set)
 
 Weka 3.6.12
