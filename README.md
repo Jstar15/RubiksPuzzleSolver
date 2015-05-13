@@ -8,13 +8,16 @@ Operating System:Microsoft Windows 7 (x64)
 ## Software Requirements:
 
 OpenCV 3.0 beta (environmental variables must be set)
+
 Weka 3.6.12
+
 Java VM 1.7
+
 Arduino 1.6.4 IDE software
  
 ## Hardware Requirements: 
-
 A Webcam: software tested using a Logitech QuickCam Pro 3000 
+
 A Rubik's cube solving robot (For robotic capability's)
 
 ## Prerequisites
@@ -41,6 +44,7 @@ NOTE: It is important that you only train the desired color with a cube face tha
 
 ## Credits
 
-The cube solving algorithm implemented in this application was developed by Mike Reid. The program is written in C and was modified to work with this project.Found here:
+The cube solving algorithm implemented in this application was developed by Mike Reid. The program is written in C and was modified to work with this project and was found here.
+
 https://github.com/jdkoftinoff/mb-linux-msli/blob/master/uClinux-dist/user/games/rubik/miker.c
 
