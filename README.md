@@ -36,6 +36,11 @@ The reset button will simply change the preview back to its default display.
 Alternatively you can input the cube state manually. This can be done by simply selecting a cube colour and then selecting the corresponding square on the cube representation diagram. 
 Do this for every square so that all squares on all faces are identical to the Rubik’s cube you are trying to solve.
 
+Once all faces of the cube have been input into the cube representation diagram select the solve button. Output will then be generated in the programs output panel,
+ the output will be in the form of a string containing the moves required to solve the Rubik’s cube. 
+
+Then put the Rubik’s cube into the robots rotation plate, select the COM port number that connects to the Arduino microcontroller and select the initiate robot button. 
+ The Arduino file generated will then be uploaded to the robot where upon completion will robotically solve the Rubik’s cube.
 
 ###Training Mode
 Training mode allows you to add datasets to the Weka training file. This will help improve results in normal mode.
